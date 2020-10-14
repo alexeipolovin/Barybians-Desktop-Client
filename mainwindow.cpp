@@ -6,31 +6,19 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+/**
+  * @brief MainWindow::MainWindow
+  *
+  * @param *parent
+  *
+  * @author Polovin Alexei (alexeipolovin@gmail.com)
+  *
+  * Класс отвечающий за главное окно, основная цель отрисовать базовый интерфейс и дополнить его одной из страниц
+*/
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-      webConnector = new WebConnector();
-//    QWidget *widget = new QWidget();
-//    auto *layout = new QVBoxLayout();
-//    auto *getDialogs = new QPushButton("Dialogs");
-//    layout->addWidget(getDialogs);
-//    textEdit = new QTextEdit();
-//    auto *postsButton = new QPushButton("Posts");
-//    layout->addWidget(textEdit);
-//    auto *allUsers = new QPushButton("All Users");
-//    auto *writePost = new QPushButton("Click Me");
-//    auto *writeMe = new QPushButton("Write Post");
-//    layout->addWidget(writePost);
-//    layout->addWidget(allUsers);
-//    layout->addWidget(writeMe);
-//    layout->addWidget(postsButton);
-//    connect(writePost, SIGNAL(clicked()), SLOT(writePost()));
-//    connect(writeMe, SIGNAL(clicked()), SLOT(writeMe()));
-//    connect(postsButton, SIGNAL(clicked()), SLOT(getAllPosts()));
-//    connect(getDialogs, SIGNAL(clicked()), SLOT(getAllDialogs()));
-//    connect(allUsers, SIGNAL(clicked()), SLOT(getAllUsers()));
-//    widget->setLayout(layout);
-//    setCentralWidget(widget);
-//    this->textEdit->insertHtml("<img src=\"https://sun9-74.userapi.com/l_dtPBrBz91LcQlRjaiy5KVhPBxBv2-s5Gf3Hg/n8YlAqplsmM.jpg\"></img>");
+    webConnector = new WebConnector();
     QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
     QPushButton *button = new QPushButton("CreateGraz");
     setCentralWidget(button);
@@ -50,7 +38,6 @@ void MainWindow::getAllDialogs()
 
 void MainWindow::createGraz()
 {
-    qDebug() << "Юхууу";
     mainUser = this->webConnector->getMainUser();
     UserPage *userPage = new UserPage();
     userPage->setInfoLayout(this->mainUser->profilePhoto ,this->mainUser->name,this->mainUser->lastName, this->mainUser->birthDate, this->mainUser->status, this->mainUser->lastVisit);
@@ -74,8 +61,8 @@ void MainWindow::writePost()
 
 void MainWindow::getAllUsers()
 {
-    QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/users", WebConnector::ALL_USERS);
     //TODO: Переписать под отдельный класс, содержащий внутри себя request и тип запроса !!
+    QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/users", WebConnector::ALL_USERS);
     this->webConnector->sendRequest(request, WebConnector::ALL_USERS);
 }
 

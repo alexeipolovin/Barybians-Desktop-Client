@@ -10,6 +10,14 @@
 #include "Data.h"
 #define END_LINE "\n"
 
+/**
+  * @brief User::User
+  *
+  * @author Polovin Alexei (alexeipolovin@gmail.com)
+  *
+  * Класс, который служит чтобы обработать приходящий запрос в json
+  *
+*/
 
 User::User()
 {
@@ -22,7 +30,14 @@ void User::printUserData()
 }
 
 
-
+/**
+ * @brief Post::Post
+ *
+ * @author Polovin Alexei (alexeipolovin@gmail.com)
+ *
+ * Класс, который служит чтобы обработать приходящий запрос в json
+ *
+ */
 Post::Post()
 {
 

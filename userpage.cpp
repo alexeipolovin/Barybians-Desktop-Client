@@ -1,4 +1,11 @@
 #include "userpage.h"
+/**
+  * @brief UserPage::UserPage
+  *
+  * @author Polovin Alexei (alexeipolovin@gmail.com)
+  *
+  * Класс отвечает за создание и взаимодействие со страницей пользователя
+*/
 
 UserPage::UserPage()
 {
