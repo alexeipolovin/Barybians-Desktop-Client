@@ -111,8 +111,6 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     case ALL_USERS: {
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         QJsonObject user = root.find("user").value().toObject();
-        qDebug() << root;
-        qDebug() << user;
         break;
     }
     case AUTH: {
@@ -127,7 +125,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         mainUser->status = user.find("status").value().toString();
         mainUser->id = user.find("userId").value().toInt();
         mainUser->printUserData();
-        QNetworkRequest getPhoto = this->createRequest("https://api.com", WebConnector::DOWNLOAD_PHOTO);
+        QNetworkRequest getPhoto = this->createRequest("https://barybians.ru/avatars/" + user.find("photo").value().toString(), WebConnector::DOWNLOAD_PHOTO);
         this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
         this->token = root.find("token").value().toString();
         qDebug() << this->token;
@@ -136,11 +134,12 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         break;
     }
     case ALL_POSTS: {
+        QByteArray array = reply.readAll();
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         QJsonArray jsonArray = document.array();
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
         QString val = firstObject.find("title").value().toString();
-        qDebug() << document.object().find("id").value().toString();
+        qDebug() << array;
         break;
     }
     case DOWNLOAD_PHOTO: {
@@ -157,7 +156,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         qDebug() << QString(imageData);
         QPixmap pm;
         pm.loadFromData(imageData);
-        this->mainUser->profilePhoto = pm;
+        this->mainUser->profilePhoto = pm.scaled(128,128);
         break;
     }
     case WRITE_POST: {

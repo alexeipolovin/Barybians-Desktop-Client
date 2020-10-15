@@ -4,17 +4,20 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QListView>
+#include <QTextEdit>
+#include <webconnector.h>
 
 class UserPage
 {
 public:
-    UserPage();
+    UserPage(WebConnector *webconnector);
     QWidget *mainWidget;
 
     QVBoxLayout *mainLayout;
     QHBoxLayout *infoLayout;
     QVBoxLayout *postsLayout;
     QListView *posts;
+    QTextEdit *postsField;
 
     QLabel *userPhoto;
     QLabel *userName;
@@ -32,7 +35,8 @@ public:
     void setInfoLayout(QPixmap &photo, QString &name, QString &lastName, QString &birthDate, QString &status, QString &lastSeen);
     void build();
 
-    void addPostToView(QListViewItem post);
+    //    void addPostToView(QListViewItem post);
+    void setPostsLayout();
 };
 
 

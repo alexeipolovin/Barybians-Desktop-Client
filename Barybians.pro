@@ -39,4 +39,6 @@ RESOURCES += \
     res.qrc
 
 DISTFILES += \
+    ../../Desktop/README.md \
+    README.md \
     main.qml

@@ -18,12 +18,20 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
+    setWindowTitle("Барыбинцы");
     webConnector = new WebConnector();
     QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
+    QVBoxLayout *layout = new QVBoxLayout();
+    QPushButton *dialogsButton = new QPushButton("Dialogi");
     QPushButton *button = new QPushButton("CreateGraz");
-    setCentralWidget(button);
+    QWidget *widget = new QWidget();
+    layout->addWidget(dialogsButton);
+    layout->addWidget(button);
+    widget->setLayout(layout);
+    setCentralWidget(widget);
     webConnector->sendRequest(request, WebConnector::AUTH);
     connect(button, SIGNAL(clicked()), SLOT(createGraz()));
+    connect(dialogsButton, SIGNAL(clicked()), SLOT(getAllPosts()));
 };
 
 MainWindow::~MainWindow()
@@ -39,7 +47,7 @@ void MainWindow::getAllDialogs()
 void MainWindow::createGraz()
 {
     mainUser = this->webConnector->getMainUser();
-    UserPage *userPage = new UserPage();
+    UserPage *userPage = new UserPage(this->webConnector);
     userPage->setInfoLayout(this->mainUser->profilePhoto ,this->mainUser->name,this->mainUser->lastName, this->mainUser->birthDate, this->mainUser->status, this->mainUser->lastVisit);
     userPage->build();
     QWidget *lay = userPage->getMainWidget();
