@@ -5,6 +5,7 @@
 
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QStackedWidget>
 #include <QTextEdit>
 
 class MainWindow : public QMainWindow
@@ -17,6 +18,7 @@ public:
     User *mainUser;
     QTextEdit *textEdit;
     WebConnector *webConnector;
+    QStackedWidget *maincontent;
 public slots:
 //    void writePost();
     void writePost();

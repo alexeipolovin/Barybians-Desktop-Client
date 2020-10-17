@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QWindow>
 #include <QWidget>
+#include <LoginWindow.h>
 
 /**
   * @brief main
@@ -17,9 +18,12 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    MainWindow *window = new MainWindow();
+//    MainWindow *window = new MainWindow();
+//    window->show();
+//    window->showMaximized();
+    LoginWindow *window = new LoginWindow();
+
     window->show();
-    window->showMaximized();
     return app.exec();
 }
 

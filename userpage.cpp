@@ -9,7 +9,7 @@
   * Класс отвечает за создание и взаимодействие со страницей пользователя
 */
 
-UserPage::UserPage(WebConnector webconnector)
+UserPage::UserPage(WebConnector *webconnector)
 {
     mainWidget = new QWidget();
     mainLayout = new QVBoxLayout();
@@ -70,5 +70,8 @@ QVBoxLayout* UserPage::getMainLayout()
 
 void UserPage::setPostsLayout()
 {
+    postsField->insertHtml("<h1>Hello, Wordl!</h1>");
+    postsField->insertHtml("<p></p>");
+    postsField->insertHtml("Привет мир!");
     this->postsLayout->addWidget(postsField);
 }

@@ -12,8 +12,14 @@ class WebConnector : public QObject
 public:
     //Вынести вообще в отдельную хрень
     User *mainUser;
-    WebConnector();
+    WebConnector(QString LOGIN, QString PASSWORD);
+
+    QString LOGIN;
+    QString PASSWORD;
+    QString token;
+
     QNetworkAccessManager *manager;
+
     enum REQUEST_TYPE {
         AUTH,
         CURRENT_USER,
@@ -23,19 +29,24 @@ public:
         GET_DIALOGS,
         DOWNLOAD_PHOTO,
     };
+
     enum TYPE {
         GET,
         POST,
         DELETE,
     };
+
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
-//    QJsonObject parseReply(QNetworkReply reply, REQUEST_TYPE type);
+
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
-    QString token;
-    QString getToken();
-    User *getMainUser();
     void setStandartHeader(QNetworkRequest &request);
+
+    QString getToken();
+
+    User *getMainUser();
+
     QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type);
+    void makeAuth();
 private:
     bool tokenState = false;
     QByteArray bearerToken;

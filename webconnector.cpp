@@ -13,11 +13,9 @@
 #include <QException>
 #include <QPixmap>
 #include <QJsonDocument>
+#include <QString>
 
 
-
-#define LOGIN "Test"
-#define PASSWORD "TEST"
 #define HEADER_APP_TYPE "application/x-www-form-urlencoded"
 #define AUTHORIZATION "Authorization"
 
@@ -29,8 +27,12 @@
   * Класс, отвечающий за взаиомдействие с REST API https://barybians.ru/api/
 */
 
-WebConnector::WebConnector()
+WebConnector::WebConnector(QString LOGIN, QString PASSWORD)
 {
+    this->LOGIN = LOGIN;
+    this->PASSWORD = PASSWORD;
+    this->token = "";
+
     manager = new QNetworkAccessManager();
 }
 
@@ -60,7 +62,7 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     switch (type)
     {
     case AUTH: {
-        request.setRawHeader("username:" LOGIN, "password:" PASSWORD);
+        request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
         //Придумать зачем я создал сигнал?
 //        emit valueChanged(this->token);
         break;
@@ -102,12 +104,18 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     return request;
 }
 
+void WebConnector::makeAuth()
+{
+    QNetworkRequest request = this->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
+    this->sendRequest(request, WebConnector::AUTH);
+}
+
 QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type) {
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
 //    qDebug() << reply.readAll();
     switch (type) {
-    //Неверный запрос?
+    // Неверный запрос?
     case ALL_USERS: {
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         QJsonObject user = root.find("user").value().toObject();
@@ -129,8 +137,13 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
         this->token = root.find("token").value().toString();
         qDebug() << this->token;
+        if(this->token == "")
+        {
+            this->token = "false";
+        }
         if(this->bearerToken.length() < 170)
             this->bearerToken.push_back("Bearer " + this->token.toUtf8());
+        emit valueChanged(this->token);
         break;
     }
     case ALL_POSTS: {
@@ -188,6 +201,10 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 }
 
 QString WebConnector::getToken() {
+    while(this->token == "")
+    {
+
+    }
     return this->token;
 }
 
@@ -202,7 +219,7 @@ User* WebConnector::getMainUser() {
   * @param request
   * @param type
   *
-  * @author Polovin Alexei
+  * @author Polovin Alexei (alexeipolovin@gmai.com)
   *
   * Делает запрос к серверу
   *
