@@ -1,8 +1,10 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 #pragma once
+#include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QPushButton>
 #include <QtSql/QSqlDatabase>
 #include "webconnector.h"
 
@@ -15,12 +17,17 @@ public:
     void resizeEvent(QResizeEvent *event);
     void checkMainWindow();
 
+    QLabel *passwordLabel;
+    QLabel *loginLabel;
+
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
 
-    WebConnector *webConnector;
+    QPushButton *loginButton;
 
     QSqlDatabase db;
+
+    WebConnector *webConnector;
 
 public slots:
     void openMainWindow();
