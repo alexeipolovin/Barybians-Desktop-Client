@@ -112,7 +112,8 @@ void WebConnector::makeAuth()
     this->sendRequest(request, WebConnector::AUTH);
 }
 
-QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type) {
+QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type)
+{
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
 //    qDebug() << reply.readAll();
@@ -231,16 +232,14 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     return root;
 }
 
-QString WebConnector::getToken() {
-    while(this->token == "")
-    {
-
-    }
+QString WebConnector::getToken()
+{
     return this->token;
 }
 
 
-User* WebConnector::getMainUser() {
+User* WebConnector::getMainUser()
+{
     return this->mainUser;
 }
 
