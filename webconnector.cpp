@@ -14,6 +14,7 @@
 #include <QPixmap>
 #include <QJsonDocument>
 #include <QString>
+#include <QThread>
 
 
 #define HEADER_APP_TYPE "application/x-www-form-urlencoded"
@@ -27,13 +28,26 @@
   * Класс, отвечающий за взаиомдействие с REST API https://barybians.ru/api/
 */
 
-WebConnector::WebConnector(QString LOGIN, QString PASSWORD)
+WebConnector::WebConnector()
 {
-    this->LOGIN = LOGIN;
-    this->PASSWORD = PASSWORD;
     this->token = "";
 
     manager = new QNetworkAccessManager();
+}
+
+
+void WebConnector::setLoginAndPassword(QString login, QString password)
+{
+    this->LOGIN = login;
+    this->PASSWORD = password;
+
+    QFile tempName("tempName.brb");
+    QFile tempLastName("tempLastName.brb");
+
+    if(tempName.open(QFile::ReadWrite) && tempLastName.open(QFile::ReadWrite)) {
+        tempName.write(this->LOGIN.toUtf8());
+        tempLastName.write(this->PASSWORD.toUtf8());
+    }
 }
 
 
@@ -106,6 +120,39 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     return request;
 }
 
+bool WebConnector::isTokenExist()
+{
+    QFile file("temp.brb");
+
+    QFile fileName("tempName.brb");
+
+    QFile fileLastName("tempLastName.brb");
+
+    if(file.open(QFile::ReadWrite) && fileName.open(QFile::ReadWrite) && fileLastName.open(QFile::ReadWrite))
+    {
+        this->token = QString(file.readAll());
+        this->LOGIN = QString(fileName.readAll());
+        this->PASSWORD = QString(fileLastName.readAll());
+
+        return true;
+    }
+
+    return false;
+
+}
+
+
+bool WebConnector::authIfExist()
+{
+    if(this->isTokenExist())
+    {
+        this->makeAuth();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void WebConnector::makeAuth()
 {
     QNetworkRequest request = this->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
@@ -126,19 +173,22 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         break;
     }
     case AUTH: {
-        this->tokenState = true;
+        QFile file("temp.brb");
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         root = document.object();
 
         QJsonObject user =  root.find("user").value().toObject();
 
         qDebug() << root;
-
+        QThread *thread = new QThread();
+        thread->start();
         mainUser = new User();
         mainUser->name = user.find("firstName").value().toString();
         mainUser->lastName = user.find("lastName").value().toString();
         mainUser->status = user.find("status").value().toString();
         mainUser->id = user.find("userId").value().toInt();
+        mainUser->photoName = user.find("photo").value().toString();
+        mainUser->lastVisit = user.find("lastVisit").value().toString();
         mainUser->printUserData();
 
         QNetworkRequest getPhoto = this->createRequest("https://barybians.ru/avatars/" + user.find("photo").value().toString(), WebConnector::DOWNLOAD_PHOTO);
@@ -155,9 +205,9 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         if(this->bearerToken.length() < 170)
             this->bearerToken.push_back("Bearer " + this->token.toUtf8());
+        file.write(this->token.toUtf8());
 
         emit valueChanged(this->token);
-
         break;
     }
     case ALL_POSTS: {

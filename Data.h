@@ -8,6 +8,7 @@
 class User {
 public:
     QPixmap profilePhoto;
+    QString photoName;
     QString name;
     QString lastName;
     QString status;

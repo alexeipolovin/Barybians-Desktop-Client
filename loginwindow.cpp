@@ -14,7 +14,11 @@
 #include <QtSql/QSqlQuery>
 
 //Может пора перейти на плюсовые константы?
-#define FONT_SIZE "font-size: 18px;"
+#define FONT_SIZE "font-size: 15px;"
+#define STANDART_ANIMATION_DURATION 1500
+#define STANDART_START_ANIMATION_VALUE 0.0
+#define STANDART_END_ANIMATION_VALUE 1.0
+#define DB_NAME "sqlite.db"
 
 /**
   * @brief LoginWindow::LoginWindow
@@ -29,10 +33,11 @@
 
 LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 {
+    webConnector = new WebConnector();
     QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
 
     db =  QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(QDir::currentPath() + "sqlite.db");
+    db.setDatabaseName(QDir::currentPath() + DB_NAME);
     bool dbOk = db.open();
 
     if(!dbOk)
@@ -45,8 +50,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 
     if(settings->value("email").toString().length() > 4)
     {
-        this->openMainWindow();
-        return;
+
     }
 
     setWindowIcon(QIcon(":/static/flex.png"));
@@ -77,7 +81,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     QString centerQSS = "QFrame "
                         "{"
                         "background-color: white;"
-                        "border-radius: 20px;"
+                        "border-radius: 30px;"
                         "height: 1000px;"
                         "width: 1000px;"
                         "}";
@@ -100,7 +104,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
                           "{"
                           "color: white;"
 //                          "color: #282830;"
-                          FONT_SIZE
+//                          FONT_SIZE
                           "background-color: black;"
                           "margin-bottom:20px;"
                           "margin-top:20px;"
@@ -130,13 +134,16 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     loginTextLabel->setStyleSheet(labelStyle + "margin-top: 20px");
 
     loginEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    loginEdit->setFont(QFont("Arial"));
     passwordEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     loginLabel->setStyleSheet(labelStyle + "margin-top: 20px");
     loginLabel->setAlignment(Qt::AlignCenter);
+    loginLabel->setFont(QFont("Arial", 12));
 
     passwordLabel->setStyleSheet(labelStyle + "margin-top: 20px");
     passwordLabel->setAlignment(Qt::AlignCenter);
+    passwordLabel->setFont(QFont("Arial", 12));
 
     loginEdit->setStyleSheet(editTextStyle);
     passwordEdit->setStyleSheet(editTextStyle);
@@ -146,6 +153,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     buttonContainer->setAlignment(Qt::AlignCenter);
 
     loginButton->setStyleSheet(buttonStyle);
+    loginButton->setFont(QFont("Arial", 12));
 
     centerLayout->addWidget(logoIcon);
 //    centerLayout->addWidget(loginTextLabel);
@@ -171,10 +179,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     connect(loginButton, SIGNAL(clicked()), SLOT(openMainWindow()));
 
     showMaximized();
-
-
-//    this->resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
-}
+    }
 
 
 /**
@@ -214,23 +219,23 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
     loginLabelAnimation->setEasingCurve(QEasingCurve::InOutQuad);
     passwordLabelAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
-    loginAnimation->setDuration(1500);
-    passwordAnimation->setDuration(1500);
-    loginLabelAnimation->setDuration(1500);
-    passwordLabelAnimation->setDuration(1500);
-    paAnimation->setDuration(1500);
+    loginAnimation->setDuration(STANDART_ANIMATION_DURATION);
+    passwordAnimation->setDuration(STANDART_ANIMATION_DURATION);
+    loginLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
+    passwordLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
+    paAnimation->setDuration(STANDART_ANIMATION_DURATION);
 
-    loginAnimation->setStartValue(0.0);
-    passwordAnimation->setStartValue(0.0);
-    loginLabelAnimation->setStartValue(0.0);
-    passwordLabelAnimation->setStartValue(0.0);
+    loginAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
+    passwordAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
+    loginLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
+    passwordLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
 
     paAnimation->setStartValue(QColor(Qt::blue));
 
-    loginAnimation->setEndValue(1.0);
-    passwordAnimation->setEndValue(1.0);
-    loginLabelAnimation->setEndValue(1.0);
-    passwordLabelAnimation->setEndValue(1.0);
+    loginAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
+    passwordAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
+    loginLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
+    passwordLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
 
     paAnimation->setEndValue(QColor(Qt::black));
 
@@ -274,7 +279,7 @@ void LoginWindow::checkMainWindow()
         }
 
         QString info;
-
+        //Можно удалить так как пока не работает
         query.exec("INSERT INTO user (NAME, PASSWORD) "
                    "VALUES ('"+username+"','"+password+"')");
         hide();
@@ -294,13 +299,12 @@ void LoginWindow::openMainWindow()
 {
     QString username = this->loginEdit->text();
     QString password = this->passwordEdit->text();
+    webConnector->setLoginAndPassword(username, password);
+
+    webConnector->makeAuth();
 
     qDebug() << username;
     qDebug() << password;
-
-    webConnector = new WebConnector(username, password);
-    webConnector->makeAuth();
-
     connect(webConnector, &WebConnector::valueChanged, this, &LoginWindow::checkMainWindow);
 
 }

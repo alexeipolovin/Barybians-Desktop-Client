@@ -1,51 +1,50 @@
 #ifndef USERPAGE_H
 #define USERPAGE_H
-#include <QWidget>
-#include <QVBoxLayout>
+
+#include <QFrame>
 #include <QLabel>
-#include <QListView>
+#include <QMainWindow>
+#include <QPushButton>
 #include <QTextEdit>
-#include <webconnector.h>
+#include <QVBoxLayout>
+#include "webconnector.h"
 
-class UserPage
+class UserPage : public QMainWindow
 {
+    Q_OBJECT
 public:
-    UserPage(WebConnector *webconnector);
-    QWidget *mainWidget;
+    explicit UserPage(WebConnector *webConnector, QWidget *parent = nullptr);
+public:
 
-    QVBoxLayout *mainLayout;
-    QHBoxLayout *infoLayout;
-    QVBoxLayout *postsLayout;
-    QListView *posts;
-    QTextEdit *postsField;
+    QWidget *ui;
 
-    QLabel *userPhoto;
-    QLabel *userName;
+    QFrame *mainInfoFrame;
+
+    QVBoxLayout *mainVLayout;
+    QVBoxLayout *nameLastNameLayout;
+
+    QHBoxLayout *mainInfoLayout;
+
+    //Временное решение
+    QTextEdit *posts;
+
+    QLabel *name;
     QLabel *lastName;
-    QLabel *birthDate;
-    QLabel *userStatus;
+    QLabel *profilePhoto;
+    QLabel *onlineStatus;
     QLabel *lastSeen;
 
-    QWidget* getMainWidget();
+    QPushButton *dialogButton;
 
-    QVBoxLayout *getMainLayout();
-    QHBoxLayout getInfoLayout();
-    QVBoxLayout getPostsLayout();
+
+    QWidget& getMainWidget();
+
 
     void setInfoLayout(QPixmap &photo, QString &name, QString &lastName, QString &birthDate, QString &status, QString &lastSeen);
     void build();
+    void resizeEvent(QResizeEvent *event);
+signals:
 
-    //    void addPostToView(QListViewItem post);
-    void setPostsLayout();
 };
-
-
-class MyItemModel : QAbstractItemModel
-{
-public:
-    QString Title;
-    QString Text;
-};
-
 
 #endif // USERPAGE_H

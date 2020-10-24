@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QWindow>
 #include <QWidget>
-#include <LoginWindow.h>
+#include "loginwindow.h"
 
 /**
   * @brief main
@@ -11,7 +11,7 @@
   * @param argc
   * @param *argv
   *
-  * @author Polovin Alexei
+  * @author Polovin Alexei (alexeipolovin@gmail.com)
   * Типичная точка старта программы
 */
 

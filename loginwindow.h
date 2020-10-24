@@ -29,6 +29,8 @@ public:
 
     WebConnector *webConnector;
 
+    bool ifExist;
+
 public slots:
     void openMainWindow();
 signals:

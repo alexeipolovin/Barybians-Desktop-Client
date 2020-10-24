@@ -12,7 +12,7 @@ class WebConnector : public QObject
 public:
     //Вынести вообще в отдельную хрень
     User *mainUser;
-    WebConnector(QString LOGIN, QString PASSWORD);
+//    WebConnector(QString LOGIN, QString PASSWORD);
 
     QString LOGIN;
     QString PASSWORD;
@@ -47,6 +47,11 @@ public:
 
     QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type);
     void makeAuth();
+    bool isTokenExist();
+    void setLoginAndPassword(QString login, QString password);
+
+    WebConnector();
+    bool authIfExist();
 private:
     bool tokenState = false;
     QByteArray bearerToken;

@@ -7,6 +7,7 @@
         <file>flex.png</file>
         <file>background.jpg</file>
         <file>bg.jpg</file>
+        <file>profile-background.png</file>
     </qresource>
     <qresource prefix="/db">
         <file>sqlite.db</file>
