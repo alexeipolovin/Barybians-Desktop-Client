@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <headers/userpage.h>
+#include <QtCore/QSettings>
 
 /**
   * @brief MainWindow::MainWindow
@@ -25,14 +26,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QVBoxLayout *layout = new QVBoxLayout();
     QPushButton *dialogsButton = new QPushButton("Dialogi");
     QPushButton *button = new QPushButton("CreateGraz");
+    auto *exitButton = new QPushButton("Exit");
     QWidget *widget = new QWidget();
     layout->addWidget(dialogsButton);
     layout->addWidget(button);
+    layout->addWidget(exitButton);
     widget->setLayout(layout);
     setCentralWidget(widget);
     webConnector->sendRequest(request, WebConnector::AUTH);
     connect(button, SIGNAL(clicked()), SLOT(createGraz()));
     connect(dialogsButton, SIGNAL(clicked()), SLOT(getAllPosts()));
+    connect(exitButton, SIGNAL(clicked()), SLOT(getAllDialogs()));
 };
 
 MainWindow::~MainWindow()
@@ -41,8 +45,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::getAllDialogs()
 {
-    QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/dialogs", WebConnector::GET_DIALOGS);
-    this->webConnector->sendRequest(request, WebConnector::GET_DIALOGS);
+    // Открытие настроек
+    auto *settings = new QSettings("settings.ini", QSettings::IniFormat);
+    // Очистка настроек
+    settings->setValue("login", "");
+    settings->setValue("passwd", "");
+    close();
 }
 
 void MainWindow::createGraz()

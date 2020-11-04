@@ -1,13 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
     </qresource>
     <qresource prefix="/design"/>
     <qresource prefix="/static">
-        <file>profile-background.jpg</file>
-        <file>flex.png</file>
-        <file>background.jpg</file>
-        <file>bg.jpg</file>
+        <file>images/profile-background.jpg</file>
+        <file>images/flex.png</file>
+        <file>images/background.jpg</file>
+        <file>images/bg.jpg</file>
     </qresource>
     <qresource prefix="/db">
     </qresource>

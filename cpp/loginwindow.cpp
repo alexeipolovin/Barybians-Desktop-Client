@@ -32,18 +32,26 @@
 LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 {
     webConnector = new WebConnector();
-    QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
 
-    if(settings->value("email").toString().length() > 4)
+    settings = new QSettings("settings.ini", QSettings::IniFormat); // создаётся/открывается файл настроек
+
+    if(settings->value("login").toString() != "" and settings->value("passwd").toString() != "") // если в файле настроек находятся переменные отвечающие за логин, то они считываются
     {
+        this->username = settings->value("login").toString();
+        this->password = settings->value("passwd").toString();
 
+        tokenStatus = true;
+
+        this->openMainWindow(); // сразу идёт переход к главному окну
+
+        hide();
     }
 
-    setWindowIcon(QIcon(":/static/flex.png"));
+    setWindowIcon(QIcon(":/static/images/flex.png"));
 
     QFrame *centerContainer = new QFrame();
 
-    QPixmap logo(":/static/flex.png");
+    QPixmap logo(":/static/images/flex.png");
 
     QWidget *ui = new QWidget;
     setCentralWidget(ui);
@@ -180,12 +188,12 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 
 void LoginWindow::resizeEvent(QResizeEvent *event)
 {
-    QGraphicsColorizeEffect *eEffect = new QGraphicsColorizeEffect(loginButton);
+    auto *eEffect = new QGraphicsColorizeEffect(loginButton);
 
-    QGraphicsOpacityEffect *loginFadeEffect = new QGraphicsOpacityEffect(loginEdit);
-    QGraphicsOpacityEffect *passwordFadeEffect = new QGraphicsOpacityEffect(passwordEdit);
-    QGraphicsOpacityEffect *loginLabelFadeEffect = new QGraphicsOpacityEffect(loginLabel);
-    QGraphicsOpacityEffect *passwordLabelFadeEffect = new QGraphicsOpacityEffect(passwordLabel);
+    auto *loginFadeEffect = new QGraphicsOpacityEffect(loginEdit);
+    auto *passwordFadeEffect = new QGraphicsOpacityEffect(passwordEdit);
+    auto *loginLabelFadeEffect = new QGraphicsOpacityEffect(loginLabel);
+    auto *passwordLabelFadeEffect = new QGraphicsOpacityEffect(passwordLabel);
 
     loginEdit->setGraphicsEffect(loginFadeEffect);
     passwordEdit->setGraphicsEffect(passwordFadeEffect);
@@ -193,11 +201,11 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
     passwordLabel->setGraphicsEffect(passwordLabelFadeEffect);
     loginButton->setGraphicsEffect(eEffect);
 
-    QPropertyAnimation *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
-    QPropertyAnimation *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
-    QPropertyAnimation *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
-    QPropertyAnimation *passwordLabelAnimation = new QPropertyAnimation(passwordLabelFadeEffect, "opacity");
-    QPropertyAnimation *paAnimation = new QPropertyAnimation(eEffect, "color");
+    auto *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
+    auto *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
+    auto *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
+    auto *passwordLabelAnimation = new QPropertyAnimation(passwordLabelFadeEffect, "opacity");
+    auto *paAnimation = new QPropertyAnimation(eEffect, "color");
 
 
     loginAnimation->setEasingCurve(QEasingCurve::InOutQuad);
@@ -231,7 +239,7 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
     passwordLabelAnimation->start();
     paAnimation->start();
 
-    QPixmap background(":/static/bg.jpg");
+    QPixmap background(":/static/images/bg.jpg");
 
     QPalette pallete;
 
@@ -245,15 +253,18 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
 
 void LoginWindow::checkMainWindow()
 {
-    QString username = this->loginEdit->text();
-    QString password = this->passwordEdit->text();
-
     qDebug() << "Ну давай тест";
     if(this->webConnector->token != "false")
     {
         hide();
 
-        MainWindow *mainWindow = new MainWindow();
+        if(!tokenStatus) // если переменные отсутствуют в настройках, то они туда записываются
+        {
+            settings->setValue("login", username);
+            settings->setValue("passwd", password);
+        }
+
+        auto *mainWindow = new MainWindow();
         mainWindow->show();
 
         this->close();
@@ -266,8 +277,10 @@ void LoginWindow::checkMainWindow()
 
 void LoginWindow::openMainWindow()
 {
-    QString username = this->loginEdit->text();
-    QString password = this->passwordEdit->text();
+    if(!tokenStatus) {
+        username = this->loginEdit->text();
+        password = this->passwordEdit->text();
+    }
     webConnector->setLoginAndPassword(username, password);
 
     webConnector->makeAuth();

@@ -23,8 +23,6 @@ Card::Card(const QString& title, const QString& text, QWidget *parent) {
                         "{"
                         "background-color: white;"
                         "border-radius: 30px;"
-                        "height: 1000px;"
-                        "width: 1000px;"
                         "}";
 
     container->setStyleSheet(centerQSS);

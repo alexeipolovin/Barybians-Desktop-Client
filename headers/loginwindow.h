@@ -1,10 +1,10 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
-#pragma once
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QtCore/QSettings>
 #include "webconnector.h"
 
 class LoginWindow : public QMainWindow
@@ -19,20 +19,25 @@ public:
     QLabel *passwordLabel;
     QLabel *loginLabel;
 
+    QSettings *settings;
+
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
 
     QPushButton *loginButton;
 
+    QString username;
+    QString password;
 
     WebConnector *webConnector;
 
-    bool ifExist;
+    bool tokenStatus;
 
+    bool ifExist;
 public slots:
     void openMainWindow();
-signals:
 
+signals:
 };
 
 #endif // LOGINWINDOW_H
