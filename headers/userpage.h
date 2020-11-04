@@ -37,13 +37,12 @@ public:
     QPushButton *dialogButton;
 
 
-    QWidget& getMainWidget();
+    QWidget& getMainWidget() const;
 
 
     void setInfoLayout(QPixmap &photo, QString &name, QString &lastName, QString &birthDate, QString &status, QString &lastSeen);
     void build();
     void resizeEvent(QResizeEvent *event);
-signals:
 
 };
 

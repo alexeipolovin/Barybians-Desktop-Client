@@ -10,10 +10,7 @@ class WebConnector : public QObject
 {
     Q_OBJECT
 public:
-    //Вынести вообще в отдельную хрень
     User *mainUser;
-//    WebConnector(QString LOGIN, QString PASSWORD);
-
     QString LOGIN;
     QString PASSWORD;
     QString token;
@@ -30,20 +27,14 @@ public:
         DOWNLOAD_PHOTO,
     };
 
-    enum TYPE {
-        GET,
-        POST,
-        DELETE,
-    };
-
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
 
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
     void setStandartHeader(QNetworkRequest &request);
 
-    QString getToken();
+    QString getToken() const;
 
-    User *getMainUser();
+    User *getMainUser() const;
 
     QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type);
     void makeAuth();

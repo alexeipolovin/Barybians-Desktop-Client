@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QGraphicsColorizeEffect>
 #include <QPropertyAnimation>
+#include <headers/card.h>
 
 #define STANDART_ANIMATION_DURATION 3000
 
@@ -14,6 +15,8 @@ UserPage::UserPage(WebConnector *webConnector, QWidget *parent) : QMainWindow(pa
 {
     qDebug() << "Main User"; webConnector->mainUser->printUserData();
     ui = new QWidget();
+
+    dialogButton = new QPushButton("Dialogs");
 
     mainInfoFrame = new QFrame();
 
@@ -30,7 +33,7 @@ UserPage::UserPage(WebConnector *webConnector, QWidget *parent) : QMainWindow(pa
     lastSeen = new QLabel("inf");
 
     name->setText(webConnector->mainUser->name + " " + webConnector->mainUser->lastName);
-//    lastName->setText(webConnector->mainUser->lastName);
+
     lastSeen->setText(webConnector->mainUser->lastVisit);
 
 
@@ -43,32 +46,18 @@ UserPage::UserPage(WebConnector *webConnector, QWidget *parent) : QMainWindow(pa
 
     name->setStyleSheet(labelQSS);
     lastName->setStyleSheet(labelQSS);
-//    lastSeen->setStyleSheet(labelQSS);
 
     QHBoxLayout *getLayout = new QHBoxLayout();
 
     profilePhoto->setAlignment(Qt::AlignCenter);
 
-
-
     nameLastNameLayout->addWidget(name);
-//    nameLastNameLayout->addWidget(lastName);
     nameLastNameLayout->addWidget(lastSeen);
+
     nameLastNameLayout->setSpacing(20);
-
-//    mainInfoLayout->setAlignment(Qt::AlignLeft);
-//    QSpacerItem *spacer = new QSpacerItem(20,0);
-
     nameLastNameLayout->setAlignment(Qt::AlignCenter);
 
-//    profilePhoto->setStyleSheet(profilePhotoQSS);
     mainInfoLayout->setSpacing(30);
-
-
-
-
-
-//    mainVLayout->setSpacing(120);
 
     QPixmap pm = *new QPixmap();
     QFile file("hello.png");
@@ -82,21 +71,20 @@ UserPage::UserPage(WebConnector *webConnector, QWidget *parent) : QMainWindow(pa
 
     profilePhoto->setPixmap(pm);
 
-
     mainInfoLayout->addWidget(profilePhoto);
+    mainInfoLayout->addWidget(dialogButton);
     mainInfoLayout->addLayout(nameLastNameLayout);
-
 
     getLayout->addLayout(mainInfoLayout);
 
     mainVLayout->addLayout(getLayout);
 
-    mainVLayout->addWidget(posts);
+    Card *myCard = new Card("Hello", "World");
+    mainVLayout->addWidget(myCard->getWidget());
 
     ui->setLayout(mainVLayout);
 
     setCentralWidget(ui);
-
 };
 
 
@@ -109,17 +97,17 @@ void UserPage::resizeEvent(QResizeEvent *event)
 {
 //    QGraphicsColorizeEffect *eEffect = new QGraphicsColorizeEffect(loginButton);
 
-    QGraphicsOpacityEffect *loginFadeEffect = new QGraphicsOpacityEffect(name);
-    QGraphicsOpacityEffect *passwordFadeEffect = new QGraphicsOpacityEffect(lastSeen);
-    QGraphicsOpacityEffect *loginLabelFadeEffect = new QGraphicsOpacityEffect(profilePhoto);
+    auto *loginFadeEffect = new QGraphicsOpacityEffect(name);
+    auto *passwordFadeEffect = new QGraphicsOpacityEffect(lastSeen);
+    auto *loginLabelFadeEffect = new QGraphicsOpacityEffect(profilePhoto);
 
     name->setGraphicsEffect(loginFadeEffect);
     lastSeen->setGraphicsEffect(passwordFadeEffect);
     profilePhoto->setGraphicsEffect(loginLabelFadeEffect);
 
-    QPropertyAnimation *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
-    QPropertyAnimation *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
-    QPropertyAnimation *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
+    auto *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
+    auto *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
+    auto *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
 
 
     loginAnimation->setEasingCurve(QEasingCurve::InOutQuad);
@@ -142,7 +130,7 @@ void UserPage::resizeEvent(QResizeEvent *event)
     loginAnimation->start();
     loginLabelAnimation->start();
 
-    QPixmap background(":/static/profile-background.png");
+    QPixmap background(":/static/profile-background.jpg");
 
     QPalette pallete;
 
@@ -153,8 +141,4 @@ void UserPage::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
 }
 
-QWidget& UserPage::getMainWidget()
-{
-    return *this->ui;
-}
 

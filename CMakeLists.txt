@@ -51,7 +51,7 @@ else()
             cpp/loginwindow.cpp
             headers/loginwindow.h
             res.qrc
-            )
+            cpp/card.cpp headers/card.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

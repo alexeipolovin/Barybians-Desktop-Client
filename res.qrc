@@ -4,11 +4,11 @@
     </qresource>
     <qresource prefix="/design"/>
     <qresource prefix="/static">
+        <file>profile-background.jpg</file>
         <file>flex.png</file>
         <file>background.jpg</file>
         <file>bg.jpg</file>
     </qresource>
     <qresource prefix="/db">
-        <file>sqlite.db</file>
     </qresource>
 </RCC>

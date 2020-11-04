@@ -234,7 +234,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             newDoc = new QFile("hello.png");
             if(newDoc->open(QIODevice::WriteOnly))
                 newDoc->write(imageData);
-        } catch (const QException e) {
+        } catch (const QException &e) {
 
             qDebug() << e.what();
         }
@@ -282,13 +282,13 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     return root;
 }
 
-QString WebConnector::getToken()
+QString WebConnector::getToken() const
 {
     return this->token;
 }
 
 
-User* WebConnector::getMainUser()
+User* WebConnector::getMainUser() const
 {
     return this->mainUser;
 }
