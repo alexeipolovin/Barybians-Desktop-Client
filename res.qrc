@@ -1,6 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-    </qresource>
+    <qresource prefix="/"/>
     <qresource prefix="/design"/>
     <qresource prefix="/static">
         <file>images/profile-background.jpg</file>
@@ -8,6 +7,6 @@
         <file>images/background.jpg</file>
         <file>images/bg.jpg</file>
     </qresource>
-    <qresource prefix="/db">
-    </qresource>
+    <qresource prefix="/db"/>
+    <qresource prefix="/pages"/>
 </RCC>

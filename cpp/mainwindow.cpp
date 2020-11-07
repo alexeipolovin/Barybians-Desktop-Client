@@ -1,9 +1,11 @@
 #include "headers/mainwindow.h"
 #include "headers/webconnector.h"
 
+#include <QGuiApplication>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QtQml/QQmlApplicationEngine>
 #include <headers/userpage.h>
 #include <QtCore/QSettings>
 
@@ -71,9 +73,12 @@ void MainWindow::writeMe()
 
 void MainWindow::writePost()
 {
-    QNetworkRequest request = this->webConnector->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
-    this->webConnector->sendRequest(request, WebConnector::AUTH);
-    this->textEdit->setText(this->webConnector->getToken());
+    QQmlApplicationEngine *engine;
+
+    QUrl url(":/main.qml");
+
+    engine->load(url);
+
 }
 
 void MainWindow::getAllUsers()

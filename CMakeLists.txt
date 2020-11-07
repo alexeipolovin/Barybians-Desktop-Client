@@ -6,6 +6,8 @@ find_package( Qt5Widgets REQUIRED)
 find_package( Qt5Gui REQUIRED )
 find_package( Qt5Network REQUIRED )
 find_package( Qt5OpenGL REQUIRED )
+find_package( Qt5Quick REQUIRED )
+find_package( Qt5QuickControls2 REQUIRED )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -30,7 +32,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets QuickControls2 REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 if(ANDROID)
@@ -48,11 +50,14 @@ else()
             headers/Data.h
             cpp/userpage.cpp
             headers/userpage.h
-            cpp/loginwindow.cpp
-            headers/loginwindow.h
+            cpp/logincontroller.cpp
+            headers/logincontroller.h
             res.qrc
+            qml.qrc
             cpp/card.cpp headers/card.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Quick)
+target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::QuickControls2)
