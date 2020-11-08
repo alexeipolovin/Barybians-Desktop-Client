@@ -24,6 +24,11 @@ User::User()
 
 }
 
+QString User::getPhotoName()
+{
+    return this->photoName;
+}
+
 void User::printUserData()
 {
     qDebug() << "name" << this->name << END_LINE << "lastName" << this->lastName << END_LINE << "id" << this->id << END_LINE << "status" << this->status;

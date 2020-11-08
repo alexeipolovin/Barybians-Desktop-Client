@@ -11,6 +11,7 @@
 #include <QSurfaceFormat>
 #include <QQuickWindow>
 #include <QQuickStyle>
+#include <headers/drawercontroller.h>
 #include <headers/logincontroller.h>
 
 /**
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qmlRegisterType<LoginController>("com.kernux.controller", 1, 0, "LoginGenerator");
+    qmlRegisterType<DrawerController>("com.kernux.drawer", 1, 0, "DrawerController");
     QQuickStyle::setStyle("Imagine");
     QGuiApplication app(argc, argv);
 

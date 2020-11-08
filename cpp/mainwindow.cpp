@@ -58,11 +58,11 @@ void MainWindow::getAllDialogs()
 void MainWindow::createGraz()
 {
     mainUser = this->webConnector->getMainUser();
-    UserPage *userPage = new UserPage(this->webConnector);
-    userPage->setInfoLayout(this->mainUser->profilePhoto ,this->mainUser->name,this->mainUser->lastName, this->mainUser->birthDate, this->mainUser->status, this->mainUser->lastVisit);
+//    UserPage *userPage = new UserPage(this->webConnector);
+//    userPage->setInfoLayout(this->mainUser->profilePhoto ,this->mainUser->name,this->mainUser->lastName, this->mainUser->birthDate, this->mainUser->status, this->mainUser->lastVisit);
 //    userPage->build();
     hide();
-    userPage->show();
+//    userPage->show();
 }
 
 void MainWindow::writeMe()

@@ -12,12 +12,18 @@ void LoginController::checkReply()
 {
     if(this->webConnector->getToken() != "false") {
         qDebug() << "LOGIN SUCCES!!!!";
+        QSettings *settings = new QSettings("login.ini", QSettings::IniFormat);
+        settings->setValue("login", _login);
+        settings->setValue("password", _password);
+        settings->setValue("token", webConnector->getToken());
         emit loginSucces(true);
     } else {
+
         qDebug() << "LOGIN FAILES";
         emit loginSucces(false);
     }
 }
+
 
 void LoginController::setPassword(const QString &password)
 {

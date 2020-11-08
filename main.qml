@@ -28,8 +28,8 @@ ApplicationWindow {
     Window {
         id: window
         visible: true
-        width: 1280
-        height: 720
+        width: 1920
+        height: 1080
         Rectangle
         {
             anchors.fill: parent

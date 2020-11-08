@@ -50,6 +50,8 @@ else()
             headers/Data.h
             cpp/logincontroller.cpp
             headers/logincontroller.h
+            cpp/drawercontroller.cpp
+            headers/drawercontroller.h
             res.qrc
             qml.qrc
             cpp/card.cpp headers/card.h)

@@ -4,6 +4,7 @@
 #include "Data.h"
 
 #include <QtNetwork/QNetworkAccessManager>
+#include <QSettings>
 
 
 class WebConnector : public QObject
@@ -11,9 +12,9 @@ class WebConnector : public QObject
     Q_OBJECT
 public:
     User *mainUser;
-    QString LOGIN;
-    QString PASSWORD;
     QString token;
+
+    QSettings *settings;
 
     QNetworkAccessManager *manager;
 
@@ -43,7 +44,10 @@ public:
 
     WebConnector();
     bool authIfExist();
+    bool checkAuth();
 private:
+    QString LOGIN;
+    QString PASSWORD;
     bool tokenState = false;
     QByteArray bearerToken;
 signals:

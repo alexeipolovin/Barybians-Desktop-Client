@@ -20,6 +20,7 @@ public:
     User();
     ~User();
     void printUserData();
+    QString getPhotoName();
 };
 
 class Post {

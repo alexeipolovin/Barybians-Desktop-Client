@@ -15,6 +15,7 @@
 #include <QJsonDocument>
 #include <QString>
 #include <QThread>
+#include <QSettings>
 
 
 #define HEADER_APP_TYPE "application/x-www-form-urlencoded"
@@ -30,24 +31,34 @@
 
 WebConnector::WebConnector()
 {
+    settings = new QSettings("login.ini", QSettings::IniFormat);
+
     this->token = "";
 
     manager = new QNetworkAccessManager();
 }
 
+bool WebConnector::checkAuth()
+{
+    QString login = settings->value("login").toString();
+    QString password = settings->value("password").toString();
+
+    if(login != "" && password != "")
+    {
+        LOGIN = login;
+        PASSWORD = password;
+        token = settings->value("token").toString();
+        bearerToken = ("Bearer " + token).toUtf8();
+        return true;
+    } else {
+        return false;
+    }
+}
 
 void WebConnector::setLoginAndPassword(QString login, QString password)
 {
     this->LOGIN = login;
     this->PASSWORD = password;
-
-    QFile tempName("tempName.brb");
-    QFile tempLastName("tempLastName.brb");
-
-    if(tempName.open(QFile::ReadWrite) && tempLastName.open(QFile::ReadWrite)) {
-        tempName.write(this->LOGIN.toUtf8());
-        tempLastName.write(this->PASSWORD.toUtf8());
-    }
 }
 
 
@@ -120,39 +131,6 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     return request;
 }
 
-bool WebConnector::isTokenExist()
-{
-    QFile file("temp.brb");
-
-    QFile fileName("tempName.brb");
-
-    QFile fileLastName("tempLastName.brb");
-
-    if(file.open(QFile::ReadWrite) && fileName.open(QFile::ReadWrite) && fileLastName.open(QFile::ReadWrite))
-    {
-        this->token = QString(file.readAll());
-        this->LOGIN = QString(fileName.readAll());
-        this->PASSWORD = QString(fileLastName.readAll());
-
-        return true;
-    }
-
-    return false;
-
-}
-
-
-bool WebConnector::authIfExist()
-{
-    if(this->isTokenExist())
-    {
-        this->makeAuth();
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void WebConnector::makeAuth()
 {
     QNetworkRequest request = this->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
@@ -173,7 +151,6 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         break;
     }
     case AUTH: {
-        QFile file("temp.brb");
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         root = document.object();
 
@@ -196,17 +173,18 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
         this->token = root.find("token").value().toString();
 
+
         qDebug() << this->token;
 
         if(this->token == "")
         {
             this->token = "false";
+        } else {
+            settings->setValue("login", this->LOGIN);
+            settings->setValue("password", this->PASSWORD);
+            settings->setValue("token", this->token);
+            bearerToken = ("Bearer" + token).toUtf8();
         }
-
-        if(this->bearerToken.length() < 170)
-            this->bearerToken.push_back("Bearer " + this->token.toUtf8());
-        file.write(this->token.toUtf8());
-
         emit valueChanged(this->token);
         break;
     }
@@ -231,7 +209,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QFile *newDoc;
 
         try {
-            newDoc = new QFile("hello.png");
+            newDoc = new QFile(mainUser->photoName);
             if(newDoc->open(QIODevice::WriteOnly))
                 newDoc->write(imageData);
         } catch (const QException &e) {
