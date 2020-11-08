@@ -48,8 +48,6 @@ else()
             headers/webconnector.h
             cpp/Data.cpp
             headers/Data.h
-            cpp/userpage.cpp
-            headers/userpage.h
             cpp/logincontroller.cpp
             headers/logincontroller.h
             res.qrc

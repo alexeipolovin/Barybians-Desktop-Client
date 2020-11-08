@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qmlRegisterType<LoginController>("com.kernux.controller", 1, 0, "LoginGenerator");
-    QQuickStyle::setStyle("Material");
+    QQuickStyle::setStyle("Imagine");
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

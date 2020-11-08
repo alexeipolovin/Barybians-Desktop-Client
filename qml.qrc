@@ -3,5 +3,9 @@
         <file>main.qml</file>
         <file>Dialog.qml</file>
         <file>DialogForm.ui.qml</file>
+        <file>MainWindow.qml</file>
+        <file>FirstPage.qml</file>
+        <file>SecondPage.qml</file>
+        <file>Header.qml</file>
     </qresource>
 </RCC>
