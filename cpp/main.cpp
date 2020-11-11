@@ -38,11 +38,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qmlRegisterType<LoginController>("com.kernux.controller", 1, 0, "LoginGenerator");
     qmlRegisterType<DrawerController>("com.kernux.drawer", 1, 0, "DrawerController");
+//    qmlRegisterType<GetDialogController>("com.kernux.getdialog", 1, 0, "GetDialogController");
     QQuickStyle::setStyle("Imagine");
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
 
     if(engine.rootObjects().isEmpty())

@@ -53,3 +53,12 @@ void DrawerController::setName(const QString &value)
 {
     name = value;
 }
+
+void anoterRandomFuncWithoutConf()
+{
+    printf("%d", 10);
+    for(int i = 0; i < 100; i++) {
+        qDebug() << "Hello, World";
+
+    }
+}

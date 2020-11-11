@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Dialog.qml</file>
-        <file>DialogForm.ui.qml</file>
-        <file>MainWindow.qml</file>
-        <file>FirstPage.qml</file>
-        <file>SecondPage.qml</file>
-        <file>Header.qml</file>
+        <file>qml/Dialog.qml</file>
+        <file>qml/DialogForm.ui.qml</file>
+        <file>qml/FirstPage.qml</file>
+        <file>qml/Header.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/MainWindow.qml</file>
+        <file>qml/SecondPage.qml</file>
     </qresource>
 </RCC>
