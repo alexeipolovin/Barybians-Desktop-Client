@@ -239,7 +239,9 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
     passwordLabelAnimation->start();
     paAnimation->start();
 
-    QPixmap background(":/static/images/bg.jpg");
+
+//    qDebug() << QFile::open(":/static/images/bg.jpg");
+    QPixmap background(":/static/bg.jpg");
 
     QPalette pallete;
 
@@ -263,8 +265,8 @@ void LoginWindow::checkMainWindow()
             settings->setValue("login", username);
             settings->setValue("passwd", password);
         }
-
-        auto *mainWindow = new MainWindow();
+        qDebug() << webConnector->token;
+        auto *mainWindow = new MainWindow(nullptr, webConnector);
         mainWindow->show();
 
         this->close();

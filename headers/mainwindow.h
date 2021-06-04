@@ -12,20 +12,12 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    MainWindow(QWidget *parent, WebConnector &webConnector);
+
+
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr, WebConnector *webConnector= nullptr);
     ~MainWindow();
-    User *mainUser;
-    QTextEdit *textEdit;
-    WebConnector *webConnector;
-    QStackedWidget *maincontent;
-public slots:
-//    void writePost();
-    void writePost();
-    void writeMe();
-    void getAllUsers();
-    void getAllPosts();
-    void getAllDialogs();
-    void createGraz();
+
 };
 #endif // MAINWINDOW_H
