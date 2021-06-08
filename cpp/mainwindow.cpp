@@ -9,6 +9,7 @@
 
 #include <QtCore/QSettings>
 #include <headers/userpage.h>
+#include <headers/FeedPage.h>
 
 /**
   * @brief MainWindow::MainWindow
@@ -25,9 +26,30 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
     setWindowTitle("Барыбинцы");
     User *mainUser = webConnector->getMainUser();
 
-    UserPage *page = new UserPage(&mainUser->photoName, mainUser->name + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector);
+    auto *page = new UserPage(&mainUser->photoName, mainUser->name + "\n" + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector);
 
     page->show();
+
+    QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/posts", WebConnector::GET_FEED);
+
+    webConnector->sendRequest(request, WebConnector::GET_FEED);
+    hide();
+
+    QNetworkRequest request1 = webConnector->createRequest("https://barybians.ru/api/users", WebConnector::ALL_USERS);
+
+    webConnector->sendRequest(request1, WebConnector::ALL_USERS);
+
+    connect(webConnector, &WebConnector::usersList, this, [this, webConnector](){
+        auto *feedPage = new FeedPage(webConnector);
+        webConnector->cachePhoto();
+        feedPage->show();
+    });
+
+
+
+//    connect(page, &UserPage::windowHidden, this, [this](){
+//       show();
+//    });
 };
 
 MainWindow::~MainWindow()

@@ -1,4 +1,5 @@
-set(CMAKE_PREFIX_PATH  "E:\\Qt\\5.15.2\\mingw81_64")
+#set(CMAKE_PREFIX_PATH  "E:\\Qt\\5.15.2\\mingw81_64")
+set(CMAKE_PREFIX_PATH  "C:\\Qt\\5.15.1\\mingw81_64")
 cmake_minimum_required(VERSION 3.5)
 
 project(Barybians-Desktop-Client LANGUAGES CXX)
@@ -57,7 +58,7 @@ else()
             cpp/loginwindow.cpp
             res.qrc
 #            qml.qrc
-            cpp/userpage.cpp headers/userpage.h)
+            cpp/userpage.cpp headers/userpage.h cpp/FeedPage.cpp headers/FeedPage.h cpp/FeedCard.cpp headers/FeedCard.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

@@ -26,7 +26,9 @@
 
 #include <QLabel>
 #include <QFile>
+#include <QtWidgets/QPushButton>
 #include "headers/userpage.h"
+#include <QPushButton>
 
 
 
@@ -44,6 +46,8 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     auto lastVisitedLabel = new QLabel(lastVisited);
     auto statusLabel = new QLabel(status);
 
+    auto dialogButton = new QPushButton("Open Dialog");
+
     if(profilePhoto != nullptr)
     {
         profilePhotoLabel->setPixmap(*profilePhoto);
@@ -60,7 +64,10 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     titleLayout->addWidget(nameLabel);
     titleLayout->addWidget(lastVisitedLabel);
 
+    titleLayout->setAlignment(Qt::AlignTop);
+
     mainLayout->addLayout(titleLayout);
+    mainLayout->addWidget(dialogButton);
 
     setLayout(mainLayout);
 }

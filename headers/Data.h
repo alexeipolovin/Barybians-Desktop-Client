@@ -17,7 +17,7 @@ public:
     int sex;
     int age;
     int id;
-    User();
+    explicit User();
     ~User();
     void printUserData();
     QString getPhotoName();
@@ -26,12 +26,18 @@ public:
 class Post {
 public:
     QString title;
+    QPixmap photo;
+    QString photoPath;
+    QString name;
     QString text;
     QString date;
     QString time;
     int userId;
     int edited;
     int id;
+
+    QString firstName;
+    QString lastName;
 
     //Ээээ наверное лишнее, я могу прямо с Jsona получить это всё
     int likesCount;

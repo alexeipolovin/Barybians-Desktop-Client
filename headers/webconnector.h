@@ -21,11 +21,12 @@ public:
     enum REQUEST_TYPE {
         AUTH,
         CURRENT_USER,
-        ALL_POSTS,
+//        ALL_POSTS,
         ALL_USERS,
         WRITE_POST,
         GET_DIALOGS,
         DOWNLOAD_PHOTO,
+        GET_FEED,
     };
 
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
@@ -42,15 +43,33 @@ public:
     bool isTokenExist();
     void setLoginAndPassword(QString login, QString password);
 
-    WebConnector();
+    explicit WebConnector();
     bool authIfExist();
     bool checkAuth();
+
+
+    QVector<Post*>* getFeed();
+    QVector<User*>* getUsersList();
+    QPixmap lastPixmap;
+
+    void cachePhoto();
 private:
+    QVector<User*> *userList;
+    QVector<Post*> *feed;
+
+    QString photoUrl;
+
     QString LOGIN;
     QString PASSWORD;
-    bool tokenState = false;
     QByteArray bearerToken;
+
+    bool tokenState = false;
+    bool userState = false;
 signals:
+    void usersList();
+    void pixmapUpdated();
+    void feedOk();
+
     void valueChanged(QString &token);
 };
 

@@ -273,8 +273,6 @@ void LoginWindow::checkMainWindow()
     } else {
         QMessageBox::warning(this, tr("Error"), tr("Wrong login or password!. Are you sure?"), QMessageBox::Cancel);
     }
-
-    qDebug() << "Плюнул БАС";
 }
 
 void LoginWindow::openMainWindow()
