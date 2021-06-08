@@ -8,12 +8,15 @@
 #include <QtWidgets/QListView>
 #include <QStandardItemModel>
 #include <QtCore/QFile>
+#include <QPainter>
+#include <QBuffer>
 
 const int baseId = 1;
 
+
 FeedPage::FeedPage(WebConnector *webConnector)
 {
-
+    setWindowIcon(QIcon(":/static/images/flex.png"));
     mainLayout = new QVBoxLayout();
     auto *listView = new QListView();
     auto *model = new QStandardItemModel(this);
@@ -45,6 +48,9 @@ FeedPage::FeedPage(WebConnector *webConnector)
                     {
                         pm.loadFromData(file.readAll());
                         item = new QStandardItem(pm, i->title + "\n" + i->text);
+                        auto *brush = new QBrush(pm);
+                        item->setBackground(*brush);
+                        delete brush;
                         item->setEditable(false);
                     } else {
 //                        qDebug() << "Free File";
@@ -52,7 +58,6 @@ FeedPage::FeedPage(WebConnector *webConnector)
                         item->setEditable(false);
                     }
                     file.deleteLater();
-                    n++;
                 }
 
             model->appendRow(item);

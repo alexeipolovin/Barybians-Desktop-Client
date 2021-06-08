@@ -36,6 +36,7 @@ UserPage::~UserPage() =default;
 
 UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited, QString status,
                    WebConnector *webConnector, QPixmap *profilePhoto) {
+    setWindowIcon(QIcon(":/images/flex.png"));
     this->setFixedSize(300, 300);
 
     mainLayout = new QVBoxLayout();

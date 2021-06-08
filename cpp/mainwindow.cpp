@@ -41,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     connect(webConnector, &WebConnector::usersList, this, [this, webConnector](){
         auto *feedPage = new FeedPage(webConnector);
-        webConnector->cachePhoto();
         feedPage->show();
     });
 

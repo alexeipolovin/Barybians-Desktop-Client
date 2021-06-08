@@ -140,11 +140,20 @@ void WebConnector::makeAuth()
 }
 
 
-void WebConnector::cachePhoto()
+void WebConnector::cachePhoto(QNetworkReply *reply_photo, QNetworkRequest request)
 {
+    QByteArray array = reply_photo->readAll();
+    QString string = request.url().toString();
+    QString photoName = string.split("/").last();
+    qDebug() << photoName;
+    QFile file(photoName);
+    if(file.open(QFile::ReadWrite))
+    {
+        file.write(array);
+    }
 }
 
-QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type)
+QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, QNetworkRequest request)
 {
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
@@ -180,7 +189,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             this->photoUrl = user->photoName;
             sendRequest(request, WebConnector::DOWNLOAD_PHOTO);
             userList->push_back(user);
-            userPhotoMap.insert(user, user->photoName);
+            userPhotoMap.insert(user->photoName, user->photoName);
         }
         emit usersList();
         this->userState = true;
@@ -269,7 +278,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QFile *newDoc;
 
         try {
-            newDoc = new QFile(this->photoUrl);
+            newDoc = new QFile(request.url().toString().split("/").last());
             if(newDoc->open(QIODevice::WriteOnly))
                 newDoc->write(imageData);
         } catch (const QException &e) {
@@ -358,6 +367,7 @@ User* WebConnector::getMainUser() const
 void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type)
 {
     QNetworkReply *reply;
+    QNetworkReply *reply_photo;
     switch (type) {
     case AUTH: {
         auto *params = new QUrlQuery();
@@ -384,7 +394,11 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
     }
     case DOWNLOAD_PHOTO: {
         reply = manager->get(request);
-
+//        reply_photo = manager->get(request);
+//        connect(reply_photo, &QNetworkReply::finished, this, [this, reply_photo, request]() {
+//            cachePhoto(reply_photo, request);
+//            reply_photo->deleteLater();
+//        });
         break;
     }
     case GET_FEED: {
@@ -403,8 +417,9 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         break;
     }
     };
-    connect(reply, &QNetworkReply::finished, this, [this, reply, type]() {
-        QJsonObject obj = parseReply(*reply, type);
+    connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
+        QJsonObject obj = parseReply(*reply, type, request);
         reply->deleteLater();
     });
+
 }
