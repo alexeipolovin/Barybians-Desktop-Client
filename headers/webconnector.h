@@ -54,6 +54,7 @@ public:
 
     void cachePhoto();
 private:
+    QMap<User*,QString>  userPhotoMap;
     QVector<User*> *userList;
     QVector<Post*> *feed;
 

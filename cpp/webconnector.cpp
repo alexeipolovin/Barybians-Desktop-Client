@@ -126,7 +126,6 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
         break;
     }
     case DOWNLOAD_PHOTO: {
-//        goto set_standart_header;
         setStandartHeader(request);
         break;
     }
@@ -143,17 +142,6 @@ void WebConnector::makeAuth()
 
 void WebConnector::cachePhoto()
 {
-    if(this->userState)
-    {
-        for(auto i:*userList)
-        {
-            if(!QFile::exists(i->photoName)) {
-                QNetworkRequest request = createRequest("https://barybians.ru/avatars/" + i->photoName,
-                                                        WebConnector::DOWNLOAD_PHOTO);
-                sendRequest(request, WebConnector::DOWNLOAD_PHOTO);
-            }
-        }
-    }
 }
 
 QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type)
@@ -192,6 +180,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             this->photoUrl = user->photoName;
             sendRequest(request, WebConnector::DOWNLOAD_PHOTO);
             userList->push_back(user);
+            userPhotoMap.insert(user, user->photoName);
         }
         emit usersList();
         this->userState = true;

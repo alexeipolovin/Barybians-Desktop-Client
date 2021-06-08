@@ -2,7 +2,7 @@
 // Created by Kernux on 05.06.2021.
 //
 
-#include <headers/FeedCard.h>
+#include "headers/FeedCard.h"
 #include "headers/FeedPage.h"
 #include <QDebug>
 #include <QtWidgets/QListView>
@@ -20,7 +20,6 @@ FeedPage::FeedPage(WebConnector *webConnector)
     auto vector = webConnector->getUsersList();
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, model, listView, vector](){
         qDebug() << "Data downloading...";
-        int n = 0;
         for(auto i: *webConnector->getFeed()) {
             QStandardItem *item = nullptr;
 //            connect(webConnector, &WebConnector::pixmapUpdated, this, [this, i, item, model]() mutable
@@ -31,7 +30,7 @@ FeedPage::FeedPage(WebConnector *webConnector)
                 {
                     if(j->id == i->userId)
                     {
-                        photoIndex = n;
+                        photoIndex = vector->indexOf(j);
                     } else {
                         n++;
                     }
@@ -46,15 +45,17 @@ FeedPage::FeedPage(WebConnector *webConnector)
                     {
                         pm.loadFromData(file.readAll());
                         item = new QStandardItem(pm, i->title + "\n" + i->text);
+                        item->setEditable(false);
                     } else {
 //                        qDebug() << "Free File";
                         item = new QStandardItem(webConnector->lastPixmap, i->title + "\n" + i->text);
+                        item->setEditable(false);
                     }
                     file.deleteLater();
                     n++;
                 }
 
-                model->appendRow(item);
+            model->appendRow(item);
 //            });
 //            FeedCard *feedCard = new FeedCard(i->name, i->title, i->text, nullptr, i->photoPath);
         }
@@ -67,4 +68,7 @@ FeedPage::FeedPage(WebConnector *webConnector)
 
 }
 
-FeedPage::~FeedPage() = default;
+FeedPage::~FeedPage()
+{
+    delete mainLayout;
+}

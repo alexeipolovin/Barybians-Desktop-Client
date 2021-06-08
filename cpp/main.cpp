@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "-Wclazy-qt-macros"
 #include "headers/mainwindow.h"
 
 #include <QApplication>
@@ -5,6 +7,7 @@
 #include <QWidget>
 #include "headers/loginwindow.h"
 #include <QStyleFactory>
+#include <qglobal.h>
 /**
   * @brief main
   *
@@ -36,7 +39,7 @@ int main(int argc, char *argv[])
 //    }
 #ifdef Q_OS_WIN
     QSettings darkTheme(R"(HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",QSettings::NativeFormat);
-    if(darkTheme.value("AppsUseLightTheme")==0)
+    if(darkTheme.value("AppsUseLightTheme")!=0)
     {
         qDebug() << "Dark theme enabled";
         QApplication::setStyle(QStyleFactory::create("Fusion"));
@@ -84,3 +87,5 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 //TODO: Оптимизировать потребление памяти
+
+#pragma clang diagnostic pop
