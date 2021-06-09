@@ -8,7 +8,7 @@
 #include <QWidget>
 #include <QNetworkAccessManager>
 #include "headers/Data.h"
-#define END_LINE "\n"
+const QString END_LINE = "\n";
 
 /**
   * @brief User::User

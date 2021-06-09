@@ -12,11 +12,11 @@
 #include <QMessageBox>
 
 //Может пора перейти на плюсовые константы?
-#define FONT_SIZE "font-size: 15px;"
-#define STANDART_ANIMATION_DURATION 1500
-#define STANDART_START_ANIMATION_VALUE 0.0
-#define STANDART_END_ANIMATION_VALUE 1.0
-#define DB_NAME "sqlite.db"
+const QString FONT_SIZE = "font-size: 15px;";
+const int STANDART_ANIMATION_DURATION = 1500;
+const float STANDART_START_ANIMATION_VALUE = 0.0;
+const float STANDART_END_ANIMATION_VALUE = 1.0;
+const QString DB_NAME = "sqlite.db";
 
 /**
   * @brief LoginWindow::LoginWindow
@@ -85,7 +85,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
                             "border: 1px solid #282830;"
                             "color: black;"
 //                            "background-color:#282830;"
-                            FONT_SIZE
+                            "font-size: 15px;"
                             "height:17px;"
                             "width:400px;"
                             "margin-left:20px;"

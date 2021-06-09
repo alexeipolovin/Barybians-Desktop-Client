@@ -19,8 +19,8 @@
 #include <utility>
 
 
-#define HEADER_APP_TYPE "application/x-www-form-urlencoded"
-#define AUTHORIZATION "Authorization"
+const QByteArray HEADER_APP_TYPE = "application/x-www-form-urlencoded";
+const QByteArray AUTHORIZATION = "Authorization";
 
 /**
   * @brief WebConnector::WebConnector
@@ -146,10 +146,11 @@ void WebConnector::cachePhoto(QNetworkReply *reply_photo, QNetworkRequest reques
     QString string = request.url().toString();
     QString photoName = string.split("/").last();
     qDebug() << photoName;
-    QFile file(photoName);
-    if(file.open(QFile::ReadWrite))
-    {
-        file.write(array);
+    if(!QFile::exists(photoName)) {
+        QFile file(photoName);
+        if (file.open(QFile::ReadWrite)) {
+            file.write(array);
+        }
     }
 }
 
@@ -276,22 +277,12 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QByteArray imageData = reply.readAll();
 
         QFile *newDoc;
-
-        try {
-            newDoc = new QFile(request.url().toString().split("/").last());
-            if(newDoc->open(QIODevice::WriteOnly))
-                newDoc->write(imageData);
-        } catch (const QException &e) {
-
-            qDebug() << e.what();
-        }
-        qDebug() << QString(imageData);
-
-        QPixmap pm;
-        pm.loadFromData(imageData);
-
-        this->lastPixmap = pm;
-        emit pixmapUpdated();
+            QString photoName = request.url().toString().split("/").last();
+            newDoc = new QFile(photoName);
+            if(!newDoc->exists(photoName)) {
+                if (newDoc->open(QIODevice::WriteOnly))
+                    newDoc->write(imageData);
+            }
         break;
     }
     case WRITE_POST: {

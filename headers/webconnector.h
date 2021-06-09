@@ -52,7 +52,7 @@ public:
     QVector<User*>* getUsersList();
     QPixmap lastPixmap;
 
-    void cachePhoto(QNetworkReply *reply_photo, QNetworkRequest request);
+    static void cachePhoto(QNetworkReply *reply_photo, QNetworkRequest request);
 private:
     QMap<QString,QString>  userPhotoMap;
     QVector<User*> *userList;

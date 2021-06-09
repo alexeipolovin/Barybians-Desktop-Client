@@ -28,14 +28,9 @@ FeedPage::FeedPage(WebConnector *webConnector)
 //            connect(webConnector, &WebConnector::pixmapUpdated, this, [this, i, item, model]() mutable
 //            {
                 int photoIndex = 0;
-                int n = 0;
-                for(auto j : *vector)
-                {
-                    if(j->id == i->userId)
-                    {
+                for(auto j : *vector) {
+                    if (j->id == i->userId) {
                         photoIndex = vector->indexOf(j);
-                    } else {
-                        n++;
                     }
                 }
                 QPixmap pm;
@@ -48,9 +43,9 @@ FeedPage::FeedPage(WebConnector *webConnector)
                     {
                         pm.loadFromData(file.readAll());
                         item = new QStandardItem(pm, i->title + "\n" + i->text);
-                        auto *brush = new QBrush(pm);
-                        item->setBackground(*brush);
-                        delete brush;
+//                        auto *brush = new QBrush(pm);
+//                        item->setBackground(*brush);
+//                        delete brush;
                         item->setEditable(false);
                     } else {
 //                        qDebug() << "Free File";
