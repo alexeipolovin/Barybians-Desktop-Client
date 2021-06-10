@@ -38,7 +38,7 @@ public:
 
     User *getMainUser() const;
 
-    QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, QNetworkRequest request);
+    QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest& request);
     void makeAuth();
     bool isTokenExist();
     void setLoginAndPassword(QString login, QString password);
@@ -52,7 +52,7 @@ public:
     QVector<User*>* getUsersList();
     QPixmap lastPixmap;
 
-    static void cachePhoto(QNetworkReply *reply_photo, QNetworkRequest request);
+    static void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request);
 private:
     QMap<QString,QString>  userPhotoMap;
     QVector<User*> *userList;

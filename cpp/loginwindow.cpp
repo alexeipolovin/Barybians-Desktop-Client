@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
-#include <QDesktopWidget>
 #include <QGraphicsColorizeEffect>
 #include <QPropertyAnimation>
 #include <QDir>
@@ -49,24 +48,24 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 
     setWindowIcon(QIcon(":/static/images/flex.png"));
 
-    QFrame *centerContainer = new QFrame();
+    auto *centerContainer = new QFrame();
 
     QPixmap logo(":/static/images/flex.png");
 
-    QWidget *ui = new QWidget;
+    auto *ui = new QWidget;
     setCentralWidget(ui);
 
-    QHBoxLayout *mainHLayout = new QHBoxLayout();
-    QHBoxLayout *buttonContainer = new QHBoxLayout();
+    auto *mainHLayout = new QHBoxLayout();
+    auto *buttonContainer = new QHBoxLayout();
 
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-    QVBoxLayout *centerLayout = new QVBoxLayout();
+    auto *mainLayout = new QVBoxLayout();
+    auto *centerLayout = new QVBoxLayout();
 
     loginEdit = new QLineEdit();
     passwordEdit = new QLineEdit();
 
-    QLabel *logoIcon = new QLabel();
-    QLabel *loginTextLabel = new QLabel("<span style = 'font-size: 20px; color: black;'>LOGIN</span>");
+    auto *logoIcon = new QLabel();
+    auto *loginTextLabel = new QLabel("<span style = 'font-size: 20px; color: black;'>LOGIN</span>");
     passwordLabel = new QLabel("<span style='font-size:15px; color: black;'>Password</span>");
     loginLabel = new QLabel("<span style='font-size:15px; color: black;'>Username</span>");
 

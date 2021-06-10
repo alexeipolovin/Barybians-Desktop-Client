@@ -1,14 +1,9 @@
 #include "headers/mainwindow.h"
-#include "headers/webconnector.h"
 
 #include <QGuiApplication>
 #include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
 #include <QtQml/QQmlApplicationEngine>
-
-#include <QtCore/QSettings>
-#include <headers/userpage.h>
+#include "headers/userpage.h"
 #include <headers/FeedPage.h>
 
 /**
@@ -39,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     webConnector->sendRequest(request1, WebConnector::ALL_USERS);
 
-    connect(webConnector, &WebConnector::usersList, this, [this, webConnector](){
+    connect(webConnector, &WebConnector::usersList, this, [webConnector](){
         auto *feedPage = new FeedPage(webConnector);
         feedPage->show();
     });
@@ -49,8 +44,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 //    connect(page, &UserPage::windowHidden, this, [this](){
 //       show();
 //    });
-};
+}
 
 MainWindow::~MainWindow()
-{
-}
+= default;

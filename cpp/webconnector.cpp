@@ -1,9 +1,7 @@
 #include "headers/webconnector.h"
-#include "headers/Data.h"
 #include <QHttpMultiPart>
 #include <QUrlQuery>
 #include <QNetworkReply>
-#include <QString>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -12,8 +10,6 @@
 #include <QFile>
 #include <QException>
 #include <QPixmap>
-#include <QJsonDocument>
-#include <QString>
 #include <QThread>
 #include <QSettings>
 #include <utility>
@@ -129,7 +125,7 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
         setStandartHeader(request);
         break;
     }
-    };
+    }
     return request;
 }
 
@@ -140,7 +136,7 @@ void WebConnector::makeAuth()
 }
 
 
-void WebConnector::cachePhoto(QNetworkReply *reply_photo, QNetworkRequest request)
+void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request)
 {
     QByteArray array = reply_photo->readAll();
     QString string = request.url().toString();
@@ -154,7 +150,7 @@ void WebConnector::cachePhoto(QNetworkReply *reply_photo, QNetworkRequest reques
     }
 }
 
-QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, QNetworkRequest request)
+QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest& request)
 {
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
@@ -172,9 +168,6 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
 //        qDebug() << firstObject;
-
-        QString val = firstObject.find("title").value().toString();
-
         for(auto i : jsonArray)
         {
             qDebug() << i;
@@ -186,9 +179,9 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             user->photoName = obj.find("photo").value().toString();
             qDebug() << "Photo name:" << user->photoName;
             user->id = obj.find("id").value().toInt();
-            QNetworkRequest request = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
+            QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
             this->photoUrl = user->photoName;
-            sendRequest(request, WebConnector::DOWNLOAD_PHOTO);
+            sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
             userList->push_back(user);
             userPhotoMap.insert(user->photoName, user->photoName);
         }
@@ -258,8 +251,8 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             post->photoPath = "https://barybians.ru/avatars/" + i.toObject().find("author").value().toObject().find("photo")->toString();
             this->photoUrl = i.toObject().find("author").value().toObject().find("photo")->toString();
             post->userId = i.toObject().find("author").value().toObject().find("id")->toInt();
-            QNetworkRequest request = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
-            this->sendRequest(request, WebConnector::DOWNLOAD_PHOTO);
+            QNetworkRequest networkRequest = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
+            this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
             post->title = i.toObject().find("title")->toString();
             post->text = i.toObject().find("text")->toString();
 
@@ -279,7 +272,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QFile *newDoc;
             QString photoName = request.url().toString().split("/").last();
             newDoc = new QFile(photoName);
-            if(!newDoc->exists(photoName)) {
+            if(!QFile::exists(photoName)) {
                 if (newDoc->open(QIODevice::WriteOnly))
                     newDoc->write(imageData);
             }
@@ -316,7 +309,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         break;
     }
-    };
+    }
     reply.deleteLater();
     return root;
 }
@@ -358,7 +351,6 @@ User* WebConnector::getMainUser() const
 void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type)
 {
     QNetworkReply *reply;
-    QNetworkReply *reply_photo;
     switch (type) {
     case AUTH: {
         auto *params = new QUrlQuery();
@@ -407,7 +399,7 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
 
         break;
     }
-    };
+    }
     connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
         QJsonObject obj = parseReply(*reply, type, request);
         reply->deleteLater();

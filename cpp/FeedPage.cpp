@@ -4,15 +4,10 @@
 
 #include "headers/FeedCard.h"
 #include "headers/FeedPage.h"
-#include <QDebug>
 #include <QtWidgets/QListView>
 #include <QStandardItemModel>
 #include <QtCore/QFile>
 #include <QPainter>
-#include <QBuffer>
-
-const int baseId = 1;
-
 
 FeedPage::FeedPage(WebConnector *webConnector)
 {
