@@ -8,16 +8,20 @@
 #include <QStandardItemModel>
 #include <QtCore/QFile>
 #include <QPainter>
+#include <QTableView>
+#include <QTableWidget>
 
 FeedPage::FeedPage(WebConnector *webConnector)
 {
     setWindowIcon(QIcon(":/static/images/flex.png"));
     mainLayout = new QVBoxLayout();
     auto *listView = new QListView();
-    auto *model = new QStandardItemModel(this);
+    auto *model = new QStandardItemModel();
     auto vector = webConnector->getUsersList();
+
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, model, listView, vector](){
         qDebug() << "Data downloading...";
+        QPixmap pm;
         for(auto i: *webConnector->getFeed()) {
             QStandardItem *item = nullptr;
 //            connect(webConnector, &WebConnector::pixmapUpdated, this, [this, i, item, model]() mutable
@@ -28,7 +32,7 @@ FeedPage::FeedPage(WebConnector *webConnector)
                         photoIndex = vector->indexOf(j);
                     }
                 }
-                QPixmap pm;
+
 //                qDebug() << "User id:" << i->userId;
 //                qDebug() << "Length:" << vector->indexOf(i->userId);
                 if(vector->at(photoIndex)->photoName != "") {
@@ -41,11 +45,11 @@ FeedPage::FeedPage(WebConnector *webConnector)
 //                        auto *brush = new QBrush(pm);
 //                        item->setBackground(*brush);
 //                        delete brush;
-                        item->setEditable(false);
+//                        item->setEditable(false);
                     } else {
 //                        qDebug() << "Free File";
-                        item = new QStandardItem(webConnector->lastPixmap, i->title + "\n" + i->text);
-                        item->setEditable(false);
+//                        item = new QStandardItem(webConnector->lastPixmap, i->title + "\n" + i->text);
+//                        item->setEditable(false);
                     }
                     file.deleteLater();
                 }

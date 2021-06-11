@@ -58,7 +58,7 @@ else()
             cpp/loginwindow.cpp
             res.qrc
 #            qml.qrc
-            cpp/userpage.cpp headers/userpage.h cpp/FeedPage.cpp headers/FeedPage.h cpp/FeedCard.cpp headers/FeedCard.h)
+            cpp/userpage.cpp headers/userpage.h cpp/FeedPage.cpp headers/FeedPage.h cpp/FeedCard.cpp headers/FeedCard.h cpp/PostsTableWidget.cpp headers/PostsTableWidget.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
