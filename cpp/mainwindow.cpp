@@ -34,9 +34,13 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     webConnector->sendRequest(request1, WebConnector::ALL_USERS);
 
-    connect(webConnector, &WebConnector::usersList, this, [webConnector](){
-        auto *feedPage = new FeedPage(webConnector);
+    FeedPage *feedPage = nullptr;
+    connect(webConnector, &WebConnector::usersList, this, [webConnector, feedPage]() mutable {
+        feedPage = new FeedPage(webConnector);
         feedPage->show();
+    });
+    connect(feedPage, &QWidget::destroyed, this, [feedPage](){
+        delete feedPage;
     });
 
 

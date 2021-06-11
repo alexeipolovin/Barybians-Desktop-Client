@@ -10,7 +10,7 @@
 #include <QPainter>
 #include <QTableView>
 #include <QTableWidget>
-
+//TODO: Оптимизировать это
 FeedPage::FeedPage(WebConnector *webConnector)
 {
     setWindowIcon(QIcon(":/static/images/flex.png"));
