@@ -88,6 +88,7 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     switch (type)
     {
     case AUTH: {
+        this->userState = (bool) nullptr;
         request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
         //Придумать зачем я создал сигнал?
 //        emit valueChanged(this->token);
@@ -154,20 +155,12 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 {
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
-//    qDebug() << reply.readAll();
     switch (type) {
-    // Неверный запрос?
     case ALL_USERS: {
         QByteArray array = reply.readAll();
-//        qDebug() << array;
-//        qDebug () << array;
         QJsonDocument document = QJsonDocument::fromJson(array);
-//        qDebug() << document;
         QJsonArray jsonArray = document.array();
-//        qDebug() << jsonArray;
-
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-//        qDebug() << firstObject;
         for(auto i : jsonArray)
         {
             qDebug() << i;
@@ -192,9 +185,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     case AUTH: {
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         root = document.object();
-
         QJsonObject user =  root.find("user").value().toObject();
-
         qDebug() << root;
         mainUser = new User();
         mainUser->name = user.find("firstName").value().toString();
@@ -205,12 +196,10 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         mainUser->lastVisit = user.find("lastVisit").value().toString();
         mainUser->printUserData();
 
-
         QNetworkRequest getPhoto = this->createRequest("https://barybians.ru/avatars/" + user.find("photo").value().toString(), WebConnector::DOWNLOAD_PHOTO);
 
         this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
         this->token = root.find("token").value().toString();
-
 
         qDebug() << this->token;
 
@@ -228,21 +217,18 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     }
     case GET_FEED: {
         QByteArray array = reply.readAll();
-//        qDebug () << array;
+
         QJsonDocument document = QJsonDocument::fromJson(array);
-//        qDebug() << document;
+
         QJsonArray jsonArray = document.array();
-//        qDebug() << jsonArray;
 
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-//        qDebug() << firstObject;
-
         QString val = firstObject.find("title").value().toString();
         qDebug () << val;
         int n = 0;
         for (auto i:jsonArray)
         {
-//            qDebug () << i;
+
             qDebug () << n;
             n++;
             Post *post = new Post();
