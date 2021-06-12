@@ -8,8 +8,6 @@ find_package( Qt5Widgets REQUIRED)
 find_package( Qt5Gui REQUIRED )
 find_package( Qt5Network REQUIRED )
 find_package( Qt5OpenGL REQUIRED )
-find_package( Qt5Quick REQUIRED )
-find_package( Qt5QuickControls2 REQUIRED )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -57,11 +55,8 @@ else()
             headers/loginwindow.h
             cpp/loginwindow.cpp
             res.qrc
-#            qml.qrc
             cpp/userpage.cpp headers/userpage.h cpp/FeedPage.cpp headers/FeedPage.h cpp/FeedCard.cpp headers/FeedCard.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Network)
-target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Quick)
-target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::QuickControls2)

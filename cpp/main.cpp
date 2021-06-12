@@ -23,20 +23,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setStyle(QStyleFactory::create("Fusion"));
-//    qmlRegisterType<LoginController>("com.kernux.controller", 1, 0, "LoginGenerator");
-//    qmlRegisterType<DrawerController>("com.kernux.drawer", 1, 0, "DrawerController");
-//    qmlRegisterType<GetDialogController>("com.kernux.getdialog", 1, 0, "GetDialogController");
-//    QQuickStyle::setStyle("Imagine");
     QApplication app(argc, argv);
-//
-//    QQmlApplicationEngine engine;
-//    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-//
-//
-//    if(engine.rootObjects().isEmpty())
-//    {
-//        return -3;
-//    }
 #ifdef Q_OS_WIN
     QSettings darkTheme(R"(HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",QSettings::NativeFormat);
     if(darkTheme.value("AppsUseLightTheme")!=0)
@@ -84,7 +71,7 @@ int main(int argc, char *argv[])
 #endif
     auto *loginWindow = new LoginWindow();
     loginWindow->show();
-    return app.exec();
+    return QApplication::exec();
 }
 //TODO: Оптимизировать потребление памяти
 
