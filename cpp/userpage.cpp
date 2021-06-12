@@ -27,15 +27,14 @@
 #include <QLabel>
 #include <QFile>
 #include <QtWidgets/QPushButton>
+#include <QListView>
+#include <QStandardItemModel>
 #include "headers/userpage.h"
-#include <QPushButton>
-
-
 
 UserPage::~UserPage() =default;
 
 UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited, QString status,
-                   WebConnector *webConnector, QPixmap *profilePhoto) {
+                   WebConnector *webConnector, QPixmap *profilePhoto, int id) {
     QPixmap icon;
     if (*profilePhotoName != "")
     {
@@ -49,10 +48,12 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     QRegExp *re = new QRegExp("[a-z])([A-Z])");
 //    QStringList list = name.split(*re);
     setWindowTitle(name);
-    this->setFixedSize(300, 300);
-
+    this->resize(300, 300);
     mainLayout = new QVBoxLayout();
     titleLayout = new QHBoxLayout();
+
+    auto view = new QListView();
+    auto model = new QStandardItemModel();
 
     auto profilePhotoLabel = new QLabel();
     auto nameLabel = new QLabel(name);
@@ -82,5 +83,36 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     mainLayout->addLayout(titleLayout);
     mainLayout->addWidget(dialogButton);
 
+    auto vector = webConnector->getUsersList();
+
+    connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, vector, model, view, icon, id]() {
+        qDebug() << "Downloading again...";
+        for (auto i : *webConnector->getFeed()) {
+            QStandardItem *item = nullptr;
+            qDebug() << "User id" << i->userId;
+            qDebug() << "My id" << id;
+            int photoIndex = 0;
+            if (i->userId == id) {
+                qDebug() << "user id is" << i->userId;
+                item = new QStandardItem(icon, i->title + "\n" + i->text);
+                model->appendRow(item);
+            }
+            view->setModel(model);
+        }
+            }
+    );
+    for (auto i : *webConnector->getFeed()) {
+        QStandardItem *item = nullptr;
+        qDebug() << "User id" << i->userId;
+        qDebug() << "My id" << id;
+        int photoIndex = 0;
+        if (i->userId == id) {
+            qDebug() << "user id is" << i->userId;
+            item = new QStandardItem(icon, i->title + "\n" + i->text);
+            model->appendRow(item);
+        }
+        view->setModel(model);
+    }
+    mainLayout->addWidget(view);
     setLayout(mainLayout);
 }
