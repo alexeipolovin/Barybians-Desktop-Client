@@ -34,26 +34,27 @@ public:
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
     void setStandartHeader(QNetworkRequest &request);
 
-    QString getToken() const;
+    inline QString getToken() const;
 
-    User *getMainUser() const;
+    User &getMainUser() const;
 
     QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest& request);
     void makeAuth();
-    bool isTokenExist();
+
     void setLoginAndPassword(QString login, QString password);
 
-    explicit WebConnector();
-    bool authIfExist();
+    explicit WebConnector(bool showDebug = false);
+
     bool checkAuth();
 
 
     QVector<Post*>* getFeed();
     QVector<User*>* getUsersList();
-    QPixmap lastPixmap;
 
-    static void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request);
+    void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request);
 private:
+    bool showDebug;
+
     QMap<QString,QString>  userPhotoMap;
     QVector<User*> *userList;
 
@@ -68,7 +69,6 @@ private:
     bool userState = false;
 signals:
     void usersList();
-    void pixmapUpdated();
 
     void feedOk();
 

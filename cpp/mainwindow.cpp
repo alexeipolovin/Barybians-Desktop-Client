@@ -19,7 +19,7 @@
 MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindow(parent)
 {
     setWindowTitle("Барыбинцы");
-    User *mainUser = webConnector->getMainUser();
+    User *mainUser = &webConnector->getMainUser();
 
     auto *page = new UserPage(&mainUser->photoName, mainUser->name + "\n" + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector);
 

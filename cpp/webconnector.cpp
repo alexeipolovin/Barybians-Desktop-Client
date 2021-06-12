@@ -26,8 +26,9 @@ const QByteArray AUTHORIZATION = "Authorization";
   * Класс, отвечающий за взаиомдействие с REST API https://barybians.ru/api/
 */
 
-WebConnector::WebConnector()
+WebConnector::WebConnector(bool showDebug)
 {
+    this->showDebug = showDebug;
     feed = new QVector<Post*>;
     userList = new QVector<User*>;
     settings = new QSettings("login.ini", QSettings::IniFormat);
@@ -88,37 +89,27 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     switch (type)
     {
     case AUTH: {
-        this->userState = (bool) nullptr;
+        this->userState = (bool) "12";
         request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
-        //Придумать зачем я создал сигнал?
-//        emit valueChanged(this->token);
         break;
         }
     case ALL_USERS: {
-//        request.setRawHeader(AUTHORIZATION, this->bearerToken);
         setStandartHeader(request);
         break;
     }
     case GET_FEED: {
-//        request.setRawHeader(AUTHORIZATION, this->bearerToken);
         setStandartHeader(request);
         break;
     }
     case CURRENT_USER: {
-//        request.setRawHeader(AUTHORIZATION, this->bearerToken);
-//        goto set_standart_header;
         setStandartHeader(request);
         break;
     }
     case WRITE_POST: {
-//        request.setRawHeader(AUTHORIZATION, this->bearerToken);
-//        goto set_standart_header;
         setStandartHeader(request);
         break;
     }
     case GET_DIALOGS: {
-//        request.setRawHeader(AUTHORIZATION, this->bearerToken);
-//        goto set_standart_header;
         setStandartHeader(request);
         break;
     }
@@ -126,6 +117,10 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
         setStandartHeader(request);
         break;
     }
+        default: {
+            if(showDebug)
+                qDebug() << "Unknown request";
+        }
     }
     return request;
 }
@@ -142,7 +137,8 @@ void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest&
     QByteArray array = reply_photo->readAll();
     QString string = request.url().toString();
     QString photoName = string.split("/").last();
-    qDebug() << photoName;
+    if(showDebug)
+        qDebug() << photoName;
     if(!QFile::exists(photoName)) {
         QFile file(photoName);
         if (file.open(QFile::ReadWrite)) {
@@ -163,13 +159,16 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
         for(auto i : jsonArray)
         {
+            if(showDebug)
             qDebug() << i;
             User *user = new User();
             QJsonObject obj = i.toObject();
             user->name = obj.find("firstName").value().toString();
+            if(showDebug)
             qDebug() << user->name;
             user->lastName = obj.find("lastName").value().toString();
             user->photoName = obj.find("photo").value().toString();
+            if(showDebug)
             qDebug() << "Photo name:" << user->photoName;
             user->id = obj.find("id").value().toInt();
             QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
@@ -186,7 +185,9 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         root = document.object();
         QJsonObject user =  root.find("user").value().toObject();
+        if(showDebug)
         qDebug() << root;
+
         mainUser = new User();
         mainUser->name = user.find("firstName").value().toString();
         mainUser->lastName = user.find("lastName").value().toString();
@@ -201,6 +202,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
         this->token = root.find("token").value().toString();
 
+        if(showDebug)
         qDebug() << this->token;
 
         if(this->token == "")
@@ -224,11 +226,12 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         QJsonObject firstObject = jsonArray.takeAt(1).toObject();
         QString val = firstObject.find("title").value().toString();
+        if(showDebug)
         qDebug () << val;
         int n = 0;
         for (auto i:jsonArray)
         {
-
+            if(showDebug)
             qDebug () << n;
             n++;
             Post *post = new Post();
@@ -244,11 +247,9 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
             feed->push_back(post);
 
-//            qDebug() << i.toObject().find("title").value().toString();
         }
 
         emit feedOk();
-//        qDebug() << array;
 
         break;
     }
@@ -282,13 +283,14 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
     case CURRENT_USER: {
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
 
+        if(showDebug)
         qDebug() << document.object();
 
         break;
     }
     case GET_DIALOGS: {
         QByteArray array = reply.readAll();
-
+        if(showDebug)
         qDebug() << QString(array);
 
         array.clear();
@@ -310,15 +312,15 @@ QVector<User*>* WebConnector::getUsersList()
     return this->userList;
 }
 
-QString WebConnector::getToken() const
+inline QString WebConnector::getToken() const
 {
     return this->token;
 }
 
 
-User* WebConnector::getMainUser() const
+User& WebConnector::getMainUser() const
 {
-    return this->mainUser;
+    return *this->mainUser;
 }
 
 /**
@@ -327,7 +329,7 @@ User* WebConnector::getMainUser() const
   * @param request
   * @param type
   *
-  * @author Polovin Alexei (alexeipolovin@gmai.com)
+  * @author Polovin Alexei (alexeipolovin@gmail.com)
   *
   * Делает запрос к серверу
   *
@@ -344,12 +346,10 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         params->addQueryItem("password", PASSWORD);
 
         reply = manager->post(request, params->toString().toUtf8());
-
         break;
     }
     case ALL_USERS: {
         reply = manager->get(request); //??
-
         break;
     }
     case WRITE_POST: {
@@ -358,31 +358,22 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         params->addQueryItem("text", "Text");
 
         reply = manager->post(request, params->toString().toUtf8());
-
         break;
     }
     case DOWNLOAD_PHOTO: {
         reply = manager->get(request);
-//        reply_photo = manager->get(request);
-//        connect(reply_photo, &QNetworkReply::finished, this, [this, reply_photo, request]() {
-//            cachePhoto(reply_photo, request);
-//            reply_photo->deleteLater();
-//        });
         break;
     }
     case GET_FEED: {
         reply = manager->get(request);
-
         break;
     }
     case CURRENT_USER: {
         reply = manager->get(request);
-
         break;
     }
     case GET_DIALOGS: {
         reply = manager->get(request);
-
         break;
     }
     }
