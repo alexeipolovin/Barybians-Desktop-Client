@@ -41,6 +41,7 @@ class UserPage: public QWidget
 
     QHBoxLayout *titleLayout;
 
+
     //TODO: Сделать посты
 public:
     explicit UserPage(QString *profilePhotoName = nullptr, QString name = nullptr, QString lastVisited = nullptr, QString status = nullptr, WebConnector *webConnector = nullptr, QPixmap *profilePhoto = nullptr);

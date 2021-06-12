@@ -9,10 +9,10 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QVBoxLayout>
 
-class FeedCard : public QWidget {
+class feedcard : public QWidget {
 public:
-    FeedCard(QString name=nullptr, QString title=nullptr, QString text=nullptr, QPixmap *photoLogo=nullptr, QString photoLogoFile=nullptr);
-    ~FeedCard();
+    feedcard(QString name=nullptr, QString title=nullptr, QString text=nullptr, QPixmap *photoLogo=nullptr, QString photoLogoFile=nullptr);
+    ~feedcard();
 
     QVBoxLayout *mainLayout;
     QHBoxLayout *titleLayout;

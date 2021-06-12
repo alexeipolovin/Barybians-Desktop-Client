@@ -4,10 +4,10 @@
 
 #include <QtWidgets/QLabel>
 #include <QtCore/QFile>
-#include "headers/FeedCard.h"
+#include "headers/feedcard.h"
 #include <QDebug>
 
-FeedCard::FeedCard(QString name, QString title, QString text, QPixmap *photoLogo, QString photoLogoFile) : QWidget() {
+feedcard::feedcard(QString name, QString title, QString text, QPixmap *photoLogo, QString photoLogoFile) : QWidget() {
     mainLayout = new QVBoxLayout();
     titleLayout = new QHBoxLayout();
 
@@ -43,4 +43,4 @@ FeedCard::FeedCard(QString name, QString title, QString text, QPixmap *photoLogo
 }
 
 
-FeedCard::~FeedCard() = default;
+feedcard::~feedcard() = default;

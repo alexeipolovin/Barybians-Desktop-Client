@@ -7,7 +7,7 @@
 //#include <QJsonArray>
 #include <QWidget>
 #include <QNetworkAccessManager>
-#include "headers/Data.h"
+#include "headers/data.h"
 const QString END_LINE = "\n";
 
 /**

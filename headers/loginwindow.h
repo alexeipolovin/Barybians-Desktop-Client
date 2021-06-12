@@ -13,7 +13,7 @@ class LoginWindow : public QMainWindow
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
 
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
     void checkMainWindow();
 
     QLabel *passwordLabel;
@@ -33,7 +33,7 @@ public:
 
     bool tokenStatus;
 
-    bool ifExist;
+    bool ifExist{};
 public slots:
     void openMainWindow();
 

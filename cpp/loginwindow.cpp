@@ -30,7 +30,8 @@ const QString DB_NAME = "sqlite.db";
 
 LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
 {
-    webConnector = new WebConnector();
+    ifExist = false;
+    webConnector = new WebConnector(true);
 
     settings = new QSettings("settings.ini", QSettings::IniFormat); // создаётся/открывается файл настроек
 

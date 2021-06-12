@@ -1,7 +1,7 @@
 #ifndef WEBCONNECTOR_H
 #define WEBCONNECTOR_H
 
-#include "Data.h"
+#include "data.h"
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QSettings>
@@ -33,7 +33,7 @@ public:
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
 
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
-    void setStandartHeader(QNetworkRequest &request);
+    void standartHeader(QNetworkRequest &request);
 
     QString getToken() const;
 

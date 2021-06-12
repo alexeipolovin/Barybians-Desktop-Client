@@ -2,8 +2,8 @@
 // Created by Kernux on 05.06.2021.
 //
 
-#include "headers/FeedCard.h"
-#include "headers/FeedPage.h"
+#include "headers/feedcard.h"
+#include "headers/feedpage.h"
 #include <QtWidgets/QListView>
 #include <QStandardItemModel>
 #include <QtCore/QFile>
@@ -56,9 +56,12 @@ FeedPage::FeedPage(WebConnector *webConnector)
 
             model->appendRow(item);
 //            });
-//            FeedCard *feedCard = new FeedCard(i->name, i->title, i->text, nullptr, i->photoPath);
+//            feedcard *feedCard = new feedcard(i->name, i->title, i->text, nullptr, i->photoPath);
         }
         listView->setModel(model);
+        connect(listView, &QListView::clicked, this, [listView](){
+           qDebug() << "ListView current index:" << listView->currentIndex();
+        });
         mainLayout->addWidget(listView);
         setLayout(mainLayout);
     });

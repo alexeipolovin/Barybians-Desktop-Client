@@ -13,7 +13,7 @@
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -36,7 +36,19 @@ UserPage::~UserPage() =default;
 
 UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited, QString status,
                    WebConnector *webConnector, QPixmap *profilePhoto) {
-    setWindowIcon(QIcon(":/images/flex.png"));
+    QPixmap icon;
+    if (*profilePhotoName != "")
+    {
+        QFile file(*profilePhotoName);
+        if(file.open(QFile::ReadOnly))
+        {
+            icon.loadFromData(file.readAll());
+        }
+    }
+    setWindowIcon(QIcon(icon));\
+    QRegExp *re = new QRegExp("[a-z])([A-Z])");
+//    QStringList list = name.split(*re);
+    setWindowTitle(name);
     this->setFixedSize(300, 300);
 
     mainLayout = new QVBoxLayout();

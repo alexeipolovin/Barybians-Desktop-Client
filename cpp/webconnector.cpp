@@ -23,11 +23,12 @@ const QByteArray AUTHORIZATION = "Authorization";
   *
   * @author Polovin Alexei (alexeipolovin@gmail.com)
   *
-  * Класс, отвечающий за взаиомдействие с REST API https://barybians.ru/api/
+  * Класс, отвечающий за взаимодействие с REST API https://barybians.ru/api/
 */
 
 WebConnector::WebConnector(bool showDebug)
 {
+    mainUser = new User();
     this->showDebug = showDebug;
     feed = new QVector<Post*>;
     userList = new QVector<User*>;
@@ -62,7 +63,7 @@ void WebConnector::setLoginAndPassword(QString login, QString password)
 }
 
 
-void WebConnector::setStandartHeader(QNetworkRequest &request)
+void WebConnector::standartHeader(QNetworkRequest &request)
 {
     request.setRawHeader(AUTHORIZATION, this->bearerToken);
 }
@@ -93,32 +94,32 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
             break;
         }
         case ALL_USERS: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         case ALL_MESSAGES: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
 
         }
         case GET_FEED: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         case CURRENT_USER: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         case WRITE_POST: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         case GET_DIALOGS: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         case DOWNLOAD_PHOTO: {
-            setStandartHeader(request);
+            standartHeader(request);
             break;
         }
         default: {
@@ -176,6 +177,9 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             if(showDebug)
             qDebug() << "Photo name:" << user->photoName;
             user->id = obj.find("id").value().toInt();
+            user->lastVisit = obj.find("lastVisit").value().toString();
+            if(showDebug)
+                qDebug() << "Last Visit:" << user->lastVisit;
             QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
             this->photoUrl = user->photoName;
             sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
@@ -191,9 +195,8 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         root = document.object();
         QJsonObject user =  root.find("user").value().toObject();
         if(showDebug)
-        qDebug() << root;
+            qDebug() << root;
 
-        mainUser = new User();
         mainUser->name = user.find("firstName").value().toString();
         mainUser->lastName = user.find("lastName").value().toString();
         mainUser->status = user.find("status").value().toString();
@@ -208,7 +211,7 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         this->token = root.find("token").value().toString();
 
         if(showDebug)
-        qDebug() << this->token;
+            qDebug() << this->token;
 
         if(this->token == "")
         {
@@ -301,6 +304,8 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         break;
     }
+        case ALL_MESSAGES:
+            break;
     }
     reply.deleteLater();
     return root;

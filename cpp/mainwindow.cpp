@@ -4,7 +4,8 @@
 #include <QLineEdit>
 #include <QtQml/QQmlApplicationEngine>
 #include "headers/userpage.h"
-#include <headers/FeedPage.h>
+#include <headers/feedpage.h>
+#include <headers/userfeed.h>
 
 /**
   * @brief MainWindow::MainWindow
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     page->show();
 
-    QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/posts?start=10&end=20", WebConnector::GET_FEED);
+    QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/posts", WebConnector::GET_FEED);
 
     webConnector->sendRequest(request, WebConnector::GET_FEED);
     hide();
@@ -36,8 +37,10 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     FeedPage *feedPage = nullptr;
     connect(webConnector, &WebConnector::usersList, this, [webConnector, feedPage]() mutable {
-        feedPage = new FeedPage(webConnector);
-        feedPage->show();
+        auto *userFeed = new UserFeed(webConnector);
+        userFeed->show();
+//        feedPage = new FeedPage(webConnector);
+//        feedPage->show();
     });
     connect(feedPage, &QWidget::destroyed, this, [feedPage](){
         delete feedPage;

@@ -46,8 +46,8 @@ else()
             headers/mainwindow.h
             cpp/webconnector.cpp
             headers/webconnector.h
-            cpp/Data.cpp
-            headers/Data.h
+            cpp/data.cpp
+            headers/data.h
             cpp/logincontroller.cpp
             headers/logincontroller.h
             cpp/drawercontroller.cpp
@@ -55,7 +55,7 @@ else()
             headers/loginwindow.h
             cpp/loginwindow.cpp
             res.qrc
-            cpp/userpage.cpp headers/userpage.h cpp/FeedPage.cpp headers/FeedPage.h cpp/FeedCard.cpp headers/FeedCard.h)
+            cpp/userpage.cpp headers/userpage.h cpp/feedpage.cpp headers/feedpage.h cpp/feedcard.cpp headers/feedcard.h cpp/userfeed.cpp headers/userfeed.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
