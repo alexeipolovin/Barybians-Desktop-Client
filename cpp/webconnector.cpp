@@ -76,7 +76,7 @@ void WebConnector::setStandartHeader(QNetworkRequest &request)
  * @author Polovin Alexei (alexeipolovin@gmail.com)
  * @returns QNetworkRequest reply
  *
- * Подгатавливает и возвращает запрос
+ * Подготавливает и возвращает запрос
 */
 
 QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::REQUEST_TYPE type)
@@ -86,40 +86,45 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     request.setUrl(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, HEADER_APP_TYPE);
 
-    switch (type)
-    {
-    case AUTH: {
-        this->userState = (bool) "12";
-        request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
-        break;
+    switch (type) {
+        case AUTH: {
+            this->userState = (bool) "12";
+            request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
+            break;
         }
-    case ALL_USERS: {
-        setStandartHeader(request);
-        break;
-    }
-    case GET_FEED: {
-        setStandartHeader(request);
-        break;
-    }
-    case CURRENT_USER: {
-        setStandartHeader(request);
-        break;
-    }
-    case WRITE_POST: {
-        setStandartHeader(request);
-        break;
-    }
-    case GET_DIALOGS: {
-        setStandartHeader(request);
-        break;
-    }
-    case DOWNLOAD_PHOTO: {
-        setStandartHeader(request);
-        break;
-    }
+        case ALL_USERS: {
+            setStandartHeader(request);
+            break;
+        }
+        case ALL_MESSAGES: {
+            setStandartHeader(request);
+            break;
+
+        }
+        case GET_FEED: {
+            setStandartHeader(request);
+            break;
+        }
+        case CURRENT_USER: {
+            setStandartHeader(request);
+            break;
+        }
+        case WRITE_POST: {
+            setStandartHeader(request);
+            break;
+        }
+        case GET_DIALOGS: {
+            setStandartHeader(request);
+            break;
+        }
+        case DOWNLOAD_PHOTO: {
+            setStandartHeader(request);
+            break;
+        }
         default: {
             if(showDebug)
                 qDebug() << "Unknown request";
+            break;
         }
     }
     return request;
@@ -246,7 +251,6 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             post->text = i.toObject().find("text")->toString();
 
             feed->push_back(post);
-
         }
 
         emit feedOk();
@@ -312,7 +316,7 @@ QVector<User*>* WebConnector::getUsersList()
     return this->userList;
 }
 
-inline QString WebConnector::getToken() const
+QString WebConnector::getToken() const
 {
     return this->token;
 }
@@ -376,6 +380,9 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         reply = manager->get(request);
         break;
     }
+        case ALL_MESSAGES:
+            reply = manager->get(request);
+            break;
     }
     connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
         QJsonObject obj = parseReply(*reply, type, request);

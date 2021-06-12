@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     page->show();
 
-    QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/posts", WebConnector::GET_FEED);
+    QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/posts?start=10&end=20", WebConnector::GET_FEED);
 
     webConnector->sendRequest(request, WebConnector::GET_FEED);
     hide();

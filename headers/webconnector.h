@@ -27,6 +27,7 @@ public:
         GET_DIALOGS,
         DOWNLOAD_PHOTO,
         GET_FEED,
+        ALL_MESSAGES,
     };
 
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
@@ -34,7 +35,7 @@ public:
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
     void setStandartHeader(QNetworkRequest &request);
 
-    inline QString getToken() const;
+    QString getToken() const;
 
     User &getMainUser() const;
 
