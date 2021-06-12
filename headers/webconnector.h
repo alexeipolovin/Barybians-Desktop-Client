@@ -28,6 +28,7 @@ public:
         DOWNLOAD_PHOTO,
         GET_FEED,
         ALL_MESSAGES,
+        DIALOG_WITH,
     };
 
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
@@ -53,11 +54,18 @@ public:
     QVector<User*>* getUsersList();
 
     void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request);
+
+
+    void clearMessageList();
+
+    QVector<Message*>* getMessagesList();
 private:
     bool showDebug;
 
     QMap<QString,QString>  userPhotoMap;
     QVector<User*> *userList;
+
+    QVector<Message*> *messagesList;
 
     QVector<Post*> *feed;
 
@@ -74,6 +82,8 @@ signals:
     void feedOk();
 
     void valueChanged(QString &token);
+
+    void messageListReceived();
 };
 
 #endif // WEBCONNECTOR_H

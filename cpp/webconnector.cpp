@@ -28,6 +28,7 @@ const QByteArray AUTHORIZATION = "Authorization";
 
 WebConnector::WebConnector(bool showDebug)
 {
+    messagesList = new QVector<Message*>;
     mainUser = new User();
     this->showDebug = showDebug;
     feed = new QVector<Post*>;
@@ -122,6 +123,10 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
             standartHeader(request);
             break;
         }
+        case DIALOG_WITH: {
+            standartHeader(request);
+            break;
+        }
         default: {
             if(showDebug)
                 qDebug() << "Unknown request";
@@ -190,6 +195,33 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
         this->userState = true;
         break;
     }
+
+
+    //TODO: придумать как реализовать сортировку кто отправил кто получил для выравнивания в окне диалога
+    case DIALOG_WITH: {
+        QByteArray array = reply.readAll();
+        QJsonDocument document = QJsonDocument::fromJson(array);
+        QJsonArray jsonArray = document.object().find("messages")->toArray();
+        qDebug() << document;
+        for(auto i: jsonArray)
+        {
+            if(showDebug)
+                qDebug() << i;
+            auto message = new Message();
+            QJsonObject obj = i.toObject();
+//            obj.find("secondUser").value().toObject().find("id");
+            message->id = document.object().find("secondUser").value().toObject().find("id")->toInt();
+            if(showDebug)
+                qDebug() << "Message User Id:" << message->id;
+            message->text = obj.find("text").value().toString();
+            if(showDebug)
+                qDebug() << "Message text:" << message->text;
+            messagesList->push_back(message);
+        }
+        emit messageListReceived();
+        break;
+    }
+
     case AUTH: {
         QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
         root = document.object();
@@ -321,6 +353,10 @@ QVector<User*>* WebConnector::getUsersList()
     return this->userList;
 }
 
+QVector<Message*>* WebConnector::getMessagesList() {
+    return this->messagesList;
+}
+
 QString WebConnector::getToken() const
 {
     return this->token;
@@ -331,6 +367,7 @@ User& WebConnector::getMainUser() const
 {
     return *this->mainUser;
 }
+
 
 /**
   * @brief WebConnector::sendRequest
@@ -343,7 +380,6 @@ User& WebConnector::getMainUser() const
   * Делает запрос к серверу
   *
 */
-
 
 void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type)
 {
@@ -385,9 +421,12 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         reply = manager->get(request);
         break;
     }
-        case ALL_MESSAGES:
-            reply = manager->get(request);
-            break;
+    case ALL_MESSAGES:
+        reply = manager->get(request);
+        break;
+    case DIALOG_WITH:
+        reply = manager->get(request);
+        break;
     }
     connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
         QJsonObject obj = parseReply(*reply, type, request);

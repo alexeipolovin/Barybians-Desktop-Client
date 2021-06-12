@@ -46,4 +46,11 @@ public:
     void printData();
 };
 
+
+class Message {
+public:
+    int id;
+    QString text;
+};
+
 #endif // DATA_H

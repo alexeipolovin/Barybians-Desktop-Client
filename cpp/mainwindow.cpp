@@ -6,6 +6,7 @@
 #include "headers/userpage.h"
 #include <headers/feedpage.h>
 #include <headers/userfeed.h>
+#include <headers/dialogwindow.h>
 
 /**
   * @brief MainWindow::MainWindow
@@ -34,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
     QNetworkRequest request1 = webConnector->createRequest("https://barybians.ru/api/users", WebConnector::ALL_USERS);
 
     webConnector->sendRequest(request1, WebConnector::ALL_USERS);
+
+    DialogWindow *window = new DialogWindow(webConnector, 4);
 
     FeedPage *feedPage = nullptr;
     connect(webConnector, &WebConnector::usersList, this, [webConnector, feedPage]() mutable {
