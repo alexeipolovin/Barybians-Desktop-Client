@@ -19,12 +19,12 @@
   * Класс отвечающий за главное окно, основная цель отрисовать базовый интерфейс и дополнить его одной из страниц
 */
 
-MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindow(parent)
-{
+MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindow(parent) {
     setWindowTitle("Барыбинцы");
     User *mainUser = &webConnector->getMainUser();
 
-    auto *page = new UserPage(&mainUser->photoName, mainUser->name + " \n" + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector, nullptr, mainUser->id);
+    auto *page = new UserPage(&mainUser->photoName, mainUser->name + " \n" + mainUser->lastName, mainUser->lastVisit,
+                              mainUser->status, webConnector, nullptr, mainUser->id);
 
     page->show();
 
@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 //        feedPage = new FeedPage(webConnector);
 //        feedPage->show();
     });
-    connect(feedPage, &QWidget::destroyed, this, [feedPage](){
+    connect(feedPage, &QWidget::destroyed, this, [feedPage]() {
         delete feedPage;
     });
     auto mainLayout = new QVBoxLayout();

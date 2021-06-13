@@ -17,9 +17,13 @@ public:
     int sex;
     int age;
     int id;
+
     explicit User();
+
     ~User();
+
     void printUserData();
+
     QString getPhotoName();
 };
 
@@ -41,8 +45,11 @@ public:
 
     //Ээээ наверное лишнее, я могу прямо с Jsona получить это всё
     int likesCount;
+
     Post();
+
     ~Post();
+
     void printData();
 };
 

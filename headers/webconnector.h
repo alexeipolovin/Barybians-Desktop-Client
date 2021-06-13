@@ -7,9 +7,8 @@
 #include <QSettings>
 
 
-class WebConnector : public QObject
-{
-    Q_OBJECT
+class WebConnector : public QObject {
+Q_OBJECT
 public:
     User *mainUser;
     QString token;
@@ -35,13 +34,15 @@ public:
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
 
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
+
     void standartHeader(QNetworkRequest &request);
 
     QString getToken() const;
 
     User &getMainUser() const;
 
-    QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest& request);
+    QJsonObject parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest &request);
+
     void makeAuth();
 
     void setLoginAndPassword(QString login, QString password);
@@ -51,16 +52,17 @@ public:
     bool checkAuth();
 
 
-    QVector<Post*>* getFeed();
-    QVector<User*>* getUsersList();
+    QVector<Post *> *getFeed();
 
-    void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request);
+    QVector<User *> *getUsersList();
+
+    void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest &request);
 
 
     void clearMessageList();
 
 
-    QVector<Message*>* getMessagesList();
+    QVector<Message *> *getMessagesList();
 
     QNetworkRequest createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data);
 
@@ -69,12 +71,12 @@ private:
 
     bool showDebug;
 
-    QMap<QString,QString>  userPhotoMap;
-    QVector<User*> *userList;
+    QMap<QString, QString> userPhotoMap;
+    QVector<User *> *userList;
 
-    QVector<Message*> *messagesList;
+    QVector<Message *> *messagesList;
 
-    QVector<Post*> *feed;
+    QVector<Post *> *feed;
 
     QString photoUrl;
     QString LOGIN;
@@ -84,6 +86,7 @@ private:
     bool tokenState = false;
     bool userState = false;
 signals:
+
     void usersList();
 
     void feedOk();

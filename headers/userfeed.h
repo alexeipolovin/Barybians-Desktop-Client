@@ -12,6 +12,7 @@
 class UserFeed : public QWidget {
 public:
     UserFeed(WebConnector *webConnector);
+
     ~UserFeed();
 
     void openUserPage(int index = 0);

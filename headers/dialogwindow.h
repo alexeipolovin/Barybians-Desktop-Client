@@ -10,7 +10,7 @@
 #include <QMainWindow>
 #include "webconnector.h"
 
-class DialogWindow : public QWidget{
+class DialogWindow : public QWidget {
 
     ~DialogWindow();
 

@@ -31,16 +31,14 @@
 #include <QStandardItemModel>
 #include "headers/userpage.h"
 
-UserPage::~UserPage() =default;
+UserPage::~UserPage() = default;
 
 UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited, QString status,
                    WebConnector *webConnector, QPixmap *profilePhoto, int id) {
     QPixmap icon;
-    if (*profilePhotoName != "")
-    {
+    if (*profilePhotoName != "") {
         QFile file(*profilePhotoName);
-        if(file.open(QFile::ReadOnly))
-        {
+        if (file.open(QFile::ReadOnly)) {
             icon.loadFromData(file.readAll());
         }
     }
@@ -65,15 +63,14 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
 
     auto dialogButton = new QPushButton("Open Dialog");
 
-    if(profilePhoto != nullptr)
-    {
+    if (profilePhoto != nullptr) {
         profilePhotoLabel->setPixmap(*profilePhoto);
     } else {
         QPixmap photo;
         QFile file(*profilePhotoName);
-        if(file.open(QFile::ReadOnly)) {
+        if (file.open(QFile::ReadOnly)) {
             photo.loadFromData(file.readAll());
-            profilePhotoLabel->setPixmap(photo.scaled(128,128));
+            profilePhotoLabel->setPixmap(photo.scaled(128, 128));
         }
     }
 
@@ -89,19 +86,19 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     auto vector = webConnector->getUsersList();
 
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, vector, model, view, icon, id]() {
-        qDebug() << "Downloading again...";
-        for (auto i : *webConnector->getFeed()) {
-            QStandardItem *item;
-            qDebug() << "User id" << i->userId;
-            qDebug() << "My id" << id;
-            if (i->userId == id) {
-                qDebug() << "user id is" << i->userId;
-                item = new QStandardItem(icon, i->title + "\n" + i->text);
-                item->setEditable(false);
-                model->appendRow(item);
-            }
-            view->setModel(model);
-        }
+                qDebug() << "Downloading again...";
+                for (auto i : *webConnector->getFeed()) {
+                    QStandardItem *item;
+                    qDebug() << "User id" << i->userId;
+                    qDebug() << "My id" << id;
+                    if (i->userId == id) {
+                        qDebug() << "user id is" << i->userId;
+                        item = new QStandardItem(icon, i->title + "\n" + i->text);
+                        item->setEditable(false);
+                        model->appendRow(item);
+                    }
+                    view->setModel(model);
+                }
             }
     );
     for (auto i : *webConnector->getFeed()) {

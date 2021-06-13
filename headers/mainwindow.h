@@ -8,16 +8,17 @@
 #include <QStackedWidget>
 #include <QTextEdit>
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+Q_OBJECT
 
     MainWindow(QWidget *parent, WebConnector &webConnector);
 
 
 public:
-    MainWindow(QWidget *parent = nullptr, WebConnector *webConnector= nullptr);
+    MainWindow(QWidget *parent = nullptr, WebConnector *webConnector = nullptr);
+
     ~MainWindow();
 
 };
+
 #endif // MAINWINDOW_H

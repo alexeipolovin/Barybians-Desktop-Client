@@ -8,11 +8,10 @@
 #include <QLabel>
 #include "headers/messagecard.h"
 
-MessageCard::MessageCard(QString photoPath, QString text, bool isSelf): QWidget() {
+MessageCard::MessageCard(QString photoPath, QString text, bool isSelf) : QWidget() {
     QFile file(photoPath);
     QPixmap pm;
-    if(file.open(QFile::ReadOnly))
-    {
+    if (file.open(QFile::ReadOnly)) {
         pm.loadFromData(file.readAll());
     }
     auto layout = new QHBoxLayout();
@@ -25,7 +24,7 @@ MessageCard::MessageCard(QString photoPath, QString text, bool isSelf): QWidget(
 
     layout->addWidget(photo);
     layout->addWidget(label);
-    if(isSelf)
+    if (isSelf)
         layout->setAlignment(Qt::AlignLeft);
     else
         layout->setAlignment(Qt::AlignRight);

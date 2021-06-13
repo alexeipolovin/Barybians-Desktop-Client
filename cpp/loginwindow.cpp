@@ -28,14 +28,14 @@ const QString DB_NAME = "sqlite.db";
   *
 */
 
-LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
-{
+LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
     ifExist = false;
     webConnector = new WebConnector(true);
 
     settings = new QSettings("settings.ini", QSettings::IniFormat); // создаётся/открывается файл настроек
 
-    if(settings->value("login").toString() != "" and settings->value("passwd").toString() != "") // если в файле настроек находятся переменные отвечающие за логин, то они считываются
+    if (settings->value("login").toString() != "" and settings->value("passwd").toString() !=
+                                                      "") // если в файле настроек находятся переменные отвечающие за логин, то они считываются
     {
         this->username = settings->value("login").toString();
         this->password = settings->value("passwd").toString();
@@ -84,7 +84,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
                             "{"
                             "border: 1px solid #282830;"
                             "color: black;"
-//                            "background-color:#282830;"
+                            //                            "background-color:#282830;"
                             "font-size: 15px;"
                             "height:17px;"
                             "width:400px;"
@@ -97,8 +97,8 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     QString buttonStyle = "QPushButton "
                           "{"
                           "color: white;"
-//                          "color: #282830;"
-//                          FONT_SIZE
+                          //                          "color: #282830;"
+                          //                          FONT_SIZE
                           "background-color: black;"
                           "margin-bottom:20px;"
                           "margin-top:20px;"
@@ -116,7 +116,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     QString labelStyle = "QLabel "
                          "{"
                          "color: black;"
-//                         "color: rgb(255, 255, 255);"
+                         //                         "color: rgb(255, 255, 255);"
                          "margin-left:20px;"
                          "margin-right:20px;"
                          "}";
@@ -173,7 +173,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
     connect(loginButton, SIGNAL(clicked()), SLOT(openMainWindow()));
 
     showMaximized();
-    }
+}
 
 
 /**
@@ -186,8 +186,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent)
   * @author Polovin Alexei (alexeipolovin@gmail.com)
 */
 
-void LoginWindow::resizeEvent(QResizeEvent *event)
-{
+void LoginWindow::resizeEvent(QResizeEvent *event) {
     auto *eEffect = new QGraphicsColorizeEffect(loginButton);
 
     auto *loginFadeEffect = new QGraphicsOpacityEffect(loginEdit);
@@ -253,14 +252,12 @@ void LoginWindow::resizeEvent(QResizeEvent *event)
 }
 
 
-void LoginWindow::checkMainWindow()
-{
+void LoginWindow::checkMainWindow() {
     qDebug() << "Ну давай тест";
-    if(this->webConnector->token != "false")
-    {
+    if (this->webConnector->token != "false") {
         hide();
 
-        if(!tokenStatus) // если переменные отсутствуют в настройках, то они туда записываются
+        if (!tokenStatus) // если переменные отсутствуют в настройках, то они туда записываются
         {
             settings->setValue("login", username);
             settings->setValue("passwd", password);
@@ -275,9 +272,8 @@ void LoginWindow::checkMainWindow()
     }
 }
 
-void LoginWindow::openMainWindow()
-{
-    if(!tokenStatus) {
+void LoginWindow::openMainWindow() {
+    if (!tokenStatus) {
         username = this->loginEdit->text();
         password = this->passwordEdit->text();
     }

@@ -9,7 +9,7 @@
 #include <QString>
 #include <QWidget>
 
-class MessageCard : public QWidget{
+class MessageCard : public QWidget {
 public:
     MessageCard(QString photoPath, QString text, bool isSelf);
 };

@@ -26,13 +26,12 @@ const QByteArray AUTHORIZATION = "Authorization";
   * Класс, отвечающий за взаимодействие с REST API https://barybians.ru/api/
 */
 
-WebConnector::WebConnector(bool showDebug)
-{
-    messagesList = new QVector<Message*>;
+WebConnector::WebConnector(bool showDebug) {
+    messagesList = new QVector<Message *>;
     mainUser = new User();
     this->showDebug = showDebug;
-    feed = new QVector<Post*>;
-    userList = new QVector<User*>;
+    feed = new QVector<Post *>;
+    userList = new QVector<User *>;
     settings = new QSettings("login.ini", QSettings::IniFormat);
 
     this->token = "";
@@ -40,13 +39,11 @@ WebConnector::WebConnector(bool showDebug)
     manager = new QNetworkAccessManager();
 }
 
-bool WebConnector::checkAuth()
-{
+bool WebConnector::checkAuth() {
     QString login = settings->value("login").toString();
     QString password = settings->value("password").toString();
 
-    if(login != "" && password != "")
-    {
+    if (login != "" && password != "") {
         LOGIN = login;
         PASSWORD = password;
         token = settings->value("token").toString();
@@ -57,15 +54,13 @@ bool WebConnector::checkAuth()
     }
 }
 
-void WebConnector::setLoginAndPassword(QString login, QString password)
-{
+void WebConnector::setLoginAndPassword(QString login, QString password) {
     this->LOGIN = qMove(login);
     this->PASSWORD = qMove(password);
 }
 
 
-void WebConnector::standartHeader(QNetworkRequest &request)
-{
+void WebConnector::standartHeader(QNetworkRequest &request) {
     request.setRawHeader(AUTHORIZATION, this->bearerToken);
 }
 
@@ -81,8 +76,7 @@ void WebConnector::standartHeader(QNetworkRequest &request)
  * Подготавливает и возвращает запрос
 */
 
-QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::REQUEST_TYPE type)
-{
+QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::REQUEST_TYPE type) {
     QNetworkRequest request;
 
     request.setUrl(url);
@@ -128,7 +122,7 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
             break;
         }
         default: {
-            if(showDebug)
+            if (showDebug)
                 qDebug() << "Unknown request";
             break;
         }
@@ -136,21 +130,19 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     return request;
 }
 
-void WebConnector::makeAuth()
-{
+void WebConnector::makeAuth() {
     QNetworkRequest request = this->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
     this->sendRequest(request, WebConnector::AUTH);
 }
 
 
-void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest& request)
-{
+void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest &request) {
     QByteArray array = reply_photo->readAll();
     QString string = request.url().toString();
     QString photoName = string.split("/").last();
-    if(showDebug)
+    if (showDebug)
         qDebug() << photoName;
-    if(!QFile::exists(photoName)) {
+    if (!QFile::exists(photoName)) {
         QFile file(photoName);
         if (file.open(QFile::ReadWrite)) {
             file.write(array);
@@ -158,223 +150,220 @@ void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest&
     }
 }
 
-QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest& request)
-{
+QJsonObject
+WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, const QNetworkRequest &request) {
     //TODO: Вынести это в отдельный класс
     QJsonObject root;
     switch (type) {
-    case ALL_USERS: {
-        QByteArray array = reply.readAll();
-        QJsonDocument document = QJsonDocument::fromJson(array);
-        QJsonArray jsonArray = document.array();
-        QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-        for(auto i : jsonArray)
-        {
-            if(showDebug)
-            qDebug() << i;
-            User *user = new User();
-            QJsonObject obj = i.toObject();
-            user->name = obj.find("firstName").value().toString();
-            if(showDebug)
-            qDebug() << user->name;
-            user->lastName = obj.find("lastName").value().toString();
-            user->photoName = obj.find("photo").value().toString();
-            if(showDebug)
-            qDebug() << "Photo name:" << user->photoName;
-            user->id = obj.find("id").value().toInt();
-            user->lastVisit = obj.find("lastVisit").value().toString();
-            user->status = obj.find("status").value().toString();
-            if(showDebug)
-                qDebug() << "Last Visit:" << user->lastVisit;
-            if(!QFile::exists(user->photoName)) {
-                qDebug() << user->photoName;
-                QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
-                this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+        case ALL_USERS: {
+            QByteArray array = reply.readAll();
+            QJsonDocument document = QJsonDocument::fromJson(array);
+            QJsonArray jsonArray = document.array();
+            QJsonObject firstObject = jsonArray.takeAt(1).toObject();
+            for (auto i : jsonArray) {
+                if (showDebug)
+                    qDebug() << i;
+                User *user = new User();
+                QJsonObject obj = i.toObject();
+                user->name = obj.find("firstName").value().toString();
+                if (showDebug)
+                    qDebug() << user->name;
+                user->lastName = obj.find("lastName").value().toString();
+                user->photoName = obj.find("photo").value().toString();
+                if (showDebug)
+                    qDebug() << "Photo name:" << user->photoName;
+                user->id = obj.find("id").value().toInt();
+                user->lastVisit = obj.find("lastVisit").value().toString();
+                user->status = obj.find("status").value().toString();
+                if (showDebug)
+                    qDebug() << "Last Visit:" << user->lastVisit;
+                if (!QFile::exists(user->photoName)) {
+                    qDebug() << user->photoName;
+                    QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName,
+                                                                   WebConnector::DOWNLOAD_PHOTO);
+                    this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+                }
+                userList->push_back(user);
+                userPhotoMap.insert(user->photoName, user->photoName);
             }
-            userList->push_back(user);
-            userPhotoMap.insert(user->photoName, user->photoName);
+            emit usersList();
+            this->userState = true;
+            break;
         }
-        emit usersList();
-        this->userState = true;
-        break;
-    }
 
 
-    //TODO: придумать как реализовать сортировку кто отправил кто получил для выравнивания в окне диалога
-    case DIALOG_WITH: {
-        QByteArray array = reply.readAll();
-        QJsonDocument document = QJsonDocument::fromJson(array);
-        QJsonArray jsonArray = document.object().find("messages")->toArray();
-        qDebug() << document;
-        for(auto i: jsonArray)
-        {
-            if(showDebug)
-                qDebug() << i;
-            auto message = new Message();
-            QJsonObject obj = i.toObject();
+            //TODO: придумать как реализовать сортировку кто отправил кто получил для выравнивания в окне диалога
+        case DIALOG_WITH: {
+            QByteArray array = reply.readAll();
+            QJsonDocument document = QJsonDocument::fromJson(array);
+            QJsonArray jsonArray = document.object().find("messages")->toArray();
+            qDebug() << document;
+            for (auto i: jsonArray) {
+                if (showDebug)
+                    qDebug() << i;
+                auto message = new Message();
+                QJsonObject obj = i.toObject();
 //            obj.find("secondUser").value().toObject().find("id");
 //            message->id = document.object().find("secondUser").value().toObject().find("id")->toInt();
-            message->id = obj.find("senderId").value().toInt();
-            if(showDebug)
-                qDebug() << "Message User Id:" << message->id;
-            message->text = obj.find("text").value().toString();
-            if(showDebug)
-                qDebug() << "Message text:" << message->text;
-            messagesList->push_back(message);
-        }
-        emit messageListReceived();
-        break;
-    }
-
-    case AUTH: {
-        QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
-        root = document.object();
-        QJsonObject user =  root.find("user").value().toObject();
-        if(showDebug)
-            qDebug() << root;
-
-        mainUser->name = user.find("firstName").value().toString();
-        mainUser->lastName = user.find("lastName").value().toString();
-        mainUser->status = user.find("status").value().toString();
-        mainUser->id = user.find("userId").value().toInt();
-        mainUser->photoName = user.find("photo").value().toString();
-        mainUser->lastVisit = user.find("lastVisit").value().toString();
-        mainUser->printUserData();
-
-        QNetworkRequest getPhoto = this->createRequest("https://barybians.ru/avatars/" + user.find("photo").value().toString(), WebConnector::DOWNLOAD_PHOTO);
-
-        this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
-        this->token = root.find("token").value().toString();
-
-        if(showDebug)
-            qDebug() << this->token;
-
-        if(this->token == "")
-        {
-            this->token = "false";
-        } else {
-            settings->setValue("login", this->LOGIN);
-            settings->setValue("password", this->PASSWORD);
-            settings->setValue("token", this->token);
-            bearerToken = ("Bearer " + token).toUtf8();
-        }
-        emit valueChanged(this->token);
-        break;
-    }
-    case GET_FEED: {
-        QByteArray array = reply.readAll();
-
-        QJsonDocument document = QJsonDocument::fromJson(array);
-
-        QJsonArray jsonArray = document.array();
-
-        QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-        QString val = firstObject.find("title").value().toString();
-        if(showDebug)
-        qDebug () << val;
-        int n = 0;
-        for (auto i:jsonArray)
-        {
-            if(showDebug)
-            qDebug () << n;
-            n++;
-            Post *post = new Post();
-
-            post->name = i.toObject().find("author").value().toObject().find("firstName")->toString() + "\n" + i.toObject().find("author").value().toObject().find("lastName")->toString();
-            post->photoPath = "https://barybians.ru/avatars/" + i.toObject().find("author").value().toObject().find("photo")->toString();
-            this->photoUrl = i.toObject().find("author").value().toObject().find("photo")->toString();
-            post->userId = i.toObject().find("author").value().toObject().find("id")->toInt();
-            if(!QFile::exists(i.toObject().find("author").value().toObject().find("photo")->toString())) {
-                qDebug() << post->photoPath;
-                QNetworkRequest networkRequest = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
-                this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+                message->id = obj.find("senderId").value().toInt();
+                if (showDebug)
+                    qDebug() << "Message User Id:" << message->id;
+                message->text = obj.find("text").value().toString();
+                if (showDebug)
+                    qDebug() << "Message text:" << message->text;
+                messagesList->push_back(message);
             }
-            post->title = i.toObject().find("title")->toString();
-            post->text = i.toObject().find("text")->toString();
-
-            feed->push_back(post);
+            emit messageListReceived();
+            break;
         }
 
-        emit feedOk();
+        case AUTH: {
+            QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
+            root = document.object();
+            QJsonObject user = root.find("user").value().toObject();
+            if (showDebug)
+                qDebug() << root;
 
-        break;
-    }
-    case DOWNLOAD_PHOTO: {
-        QByteArray imageData = reply.readAll();
+            mainUser->name = user.find("firstName").value().toString();
+            mainUser->lastName = user.find("lastName").value().toString();
+            mainUser->status = user.find("status").value().toString();
+            mainUser->id = user.find("userId").value().toInt();
+            mainUser->photoName = user.find("photo").value().toString();
+            mainUser->lastVisit = user.find("lastVisit").value().toString();
+            mainUser->printUserData();
 
-        QFile *newDoc;
+            QNetworkRequest getPhoto = this->createRequest(
+                    "https://barybians.ru/avatars/" + user.find("photo").value().toString(),
+                    WebConnector::DOWNLOAD_PHOTO);
+
+            this->sendRequest(getPhoto, WebConnector::DOWNLOAD_PHOTO);
+            this->token = root.find("token").value().toString();
+
+            if (showDebug)
+                qDebug() << this->token;
+
+            if (this->token == "") {
+                this->token = "false";
+            } else {
+                settings->setValue("login", this->LOGIN);
+                settings->setValue("password", this->PASSWORD);
+                settings->setValue("token", this->token);
+                bearerToken = ("Bearer " + token).toUtf8();
+            }
+            emit valueChanged(this->token);
+            break;
+        }
+        case GET_FEED: {
+            QByteArray array = reply.readAll();
+
+            QJsonDocument document = QJsonDocument::fromJson(array);
+
+            QJsonArray jsonArray = document.array();
+
+            QJsonObject firstObject = jsonArray.takeAt(1).toObject();
+            QString val = firstObject.find("title").value().toString();
+            if (showDebug)
+                qDebug() << val;
+            int n = 0;
+            for (auto i:jsonArray) {
+                if (showDebug)
+                    qDebug() << n;
+                n++;
+                Post *post = new Post();
+
+                post->name = i.toObject().find("author").value().toObject().find("firstName")->toString() + "\n" +
+                             i.toObject().find("author").value().toObject().find("lastName")->toString();
+                post->photoPath = "https://barybians.ru/avatars/" +
+                                  i.toObject().find("author").value().toObject().find("photo")->toString();
+                this->photoUrl = i.toObject().find("author").value().toObject().find("photo")->toString();
+                post->userId = i.toObject().find("author").value().toObject().find("id")->toInt();
+                if (!QFile::exists(i.toObject().find("author").value().toObject().find("photo")->toString())) {
+                    qDebug() << post->photoPath;
+                    QNetworkRequest networkRequest = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
+                    this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+                }
+                post->title = i.toObject().find("title")->toString();
+                post->text = i.toObject().find("text")->toString();
+
+                feed->push_back(post);
+            }
+
+            emit feedOk();
+
+            break;
+        }
+        case DOWNLOAD_PHOTO: {
+            QByteArray imageData = reply.readAll();
+
+            QFile *newDoc;
             QString photoName = request.url().toString().split("/").last();
             newDoc = new QFile(photoName);
-            if(!QFile::exists(photoName)) {
+            if (!QFile::exists(photoName)) {
                 if (newDoc->open(QIODevice::WriteOnly))
                     newDoc->write(imageData);
             }
-        break;
-    }
-    case WRITE_POST: {
-        QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
-        root = document.object();
+            break;
+        }
+        case WRITE_POST: {
+            QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
+            root = document.object();
 
-        Post *post = new Post();
+            Post *post = new Post();
 
-        post->id = root.find("id").value().toInt();
-        post->title = root.find("title").value().toString();
-        post->text = root.find("text").value().toString();
-        post->edited = root.find("edited").value().toInt();
-        post->date = root.find("date").value().toString();
-        post->printData();
+            post->id = root.find("id").value().toInt();
+            post->title = root.find("title").value().toString();
+            post->text = root.find("text").value().toString();
+            post->edited = root.find("edited").value().toInt();
+            post->date = root.find("date").value().toString();
+            post->printData();
 
-        break;
-    }
-    case CURRENT_USER: {
-        QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
+            break;
+        }
+        case CURRENT_USER: {
+            QJsonDocument document = QJsonDocument::fromJson(reply.readAll());
 
-        if(showDebug)
-        qDebug() << document.object();
+            if (showDebug)
+                qDebug() << document.object();
 
-        break;
-    }
-    case GET_DIALOGS: {
-        QByteArray array = reply.readAll();
-        if(showDebug)
-        qDebug() << QString(array);
+            break;
+        }
+        case GET_DIALOGS: {
+            QByteArray array = reply.readAll();
+            if (showDebug)
+                qDebug() << QString(array);
 
-        array.clear();
+            array.clear();
 
-        break;
-    }
-    case SEND_MESSAGE:
-        qDebug() << "Hello world..";
-        QByteArray array = reply.readAll();
-        qDebug() << "Sending message ID:" << array;
-        break;
+            break;
+        }
+        case SEND_MESSAGE:
+            qDebug() << "Hello world..";
+            QByteArray array = reply.readAll();
+            qDebug() << "Sending message ID:" << array;
+            break;
     }
     reply.deleteLater();
     return root;
 }
 
-QVector<Post*>* WebConnector::getFeed()
-{
+QVector<Post *> *WebConnector::getFeed() {
     return this->feed;
 }
 
-QVector<User*>* WebConnector::getUsersList()
-{
+QVector<User *> *WebConnector::getUsersList() {
     return this->userList;
 }
 
-QVector<Message*>* WebConnector::getMessagesList() {
+QVector<Message *> *WebConnector::getMessagesList() {
     return this->messagesList;
 }
 
-QString WebConnector::getToken() const
-{
+QString WebConnector::getToken() const {
     return this->token;
 }
 
 
-User& WebConnector::getMainUser() const
-{
+User &WebConnector::getMainUser() const {
     return *this->mainUser;
 }
 
@@ -391,8 +380,7 @@ User& WebConnector::getMainUser() const
   *
 */
 
-QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data)
-{
+QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data) {
     this->sendingData = std::move(data);
     qDebug() << "Data is:" << this->sendingData;
     QNetworkRequest request;
@@ -443,7 +431,7 @@ QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector
             standartHeader(request);
             break;
         default: {
-            if(showDebug)
+            if (showDebug)
                 qDebug() << "Unknown request";
             break;
         }
@@ -451,8 +439,7 @@ QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector
     return request;
 }
 
-void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type)
-{
+void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type) {
     QNetworkReply *reply;
     switch (type) {
         case AUTH: {
@@ -504,9 +491,9 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
             reply = manager->post(request, params->toString().toUtf8());
             break;
     }
-        connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
-            QJsonObject obj = parseReply(*reply, type, request);
-            reply->deleteLater();
-        });
+    connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
+        QJsonObject obj = parseReply(*reply, type, request);
+        reply->deleteLater();
+    });
 
 }

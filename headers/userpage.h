@@ -32,8 +32,7 @@
 #include <QHBoxLayout>
 #include "webconnector.h"
 
-class UserPage: public QWidget
-{
+class UserPage : public QWidget {
 
     ~UserPage();
 
@@ -44,7 +43,9 @@ class UserPage: public QWidget
 
     //TODO: Сделать посты
 public:
-    explicit UserPage(QString *profilePhotoName = nullptr, QString name = nullptr, QString lastVisited = nullptr, QString status = nullptr, WebConnector *webConnector = nullptr, QPixmap *profilePhoto = nullptr, int id = 0);
+    explicit UserPage(QString *profilePhotoName = nullptr, QString name = nullptr, QString lastVisited = nullptr,
+                      QString status = nullptr, WebConnector *webConnector = nullptr, QPixmap *profilePhoto = nullptr,
+                      int id = 0);
 };
 
 #endif //BARYBIANS_DESKTOP_CLIENT_USERPAGE_H

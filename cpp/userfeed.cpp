@@ -9,28 +9,26 @@
 #include <headers/userpage.h>
 #include "headers/userfeed.h"
 
-void UserFeed::openUserPage(int index, QVector<User*> userList, WebConnector *webConnector)
-{
-    UserPage *userPage = new UserPage(&userList.at(index)->photoName, userList.at(index)->name + " \n" + userList.at(index)->lastName, userList.at(index)->lastVisit, userList.at(index)->status, webConnector, nullptr, userList.at(index)->id);
+void UserFeed::openUserPage(int index, QVector<User *> userList, WebConnector *webConnector) {
+    UserPage *userPage = new UserPage(&userList.at(index)->photoName,
+                                      userList.at(index)->name + " \n" + userList.at(index)->lastName,
+                                      userList.at(index)->lastVisit, userList.at(index)->status, webConnector, nullptr,
+                                      userList.at(index)->id);
     userPage->show();
 }
 
-UserFeed::UserFeed(WebConnector *webConnector)
-{
+UserFeed::UserFeed(WebConnector *webConnector) {
     auto mainLayout = new QVBoxLayout();
     auto listView = new QListView();
 
     auto mainModel = new QStandardItemModel();
 
-    for (auto i:*webConnector->getUsersList())
-    {
+    for (auto i:*webConnector->getUsersList()) {
         QStandardItem *item;
-        if(i->photoName != "")
-        {
+        if (i->photoName != "") {
             QPixmap pm;
             QFile file(i->photoName);
-            if(file.open(QFile::ReadOnly))
-            {
+            if (file.open(QFile::ReadOnly)) {
                 pm.loadFromData(file.readAll());
                 item = new QStandardItem(pm, i->name + "\n" + i->lastName);
             } else {
@@ -45,9 +43,10 @@ UserFeed::UserFeed(WebConnector *webConnector)
 
     setLayout(mainLayout);
 
-    connect(listView, &QListView::doubleClicked, this, [listView, webConnector, this](){
+    connect(listView, &QListView::doubleClicked, this, [listView, webConnector, this]() {
         int current_index = listView->currentIndex().row();
         openUserPage(current_index, *webConnector->getUsersList(), webConnector);
     });
 }
-UserFeed::~UserFeed()=default;
+
+UserFeed::~UserFeed() = default;

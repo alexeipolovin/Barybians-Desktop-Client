@@ -16,12 +16,10 @@ feedcard::feedcard(QString name, QString title, QString text, QPixmap *photoLogo
     auto titleLabel = new QLabel(title);
     auto textLabel = new QLabel(text);
 
-    if(photoLogo != nullptr)
-    {
+    if (photoLogo != nullptr) {
         QFile file(photoLogoFile);
 
-        if(file.open(QFile::ReadOnly))
-        {
+        if (file.open(QFile::ReadOnly)) {
             QPixmap pixmap;
             pixmap.loadFromData(file.readAll());
             photoLabel->setPixmap(pixmap);
@@ -37,7 +35,7 @@ feedcard::feedcard(QString name, QString title, QString text, QPixmap *photoLogo
     mainLayout->addWidget(titleLabel);
     mainLayout->addWidget(textLabel);
 
-    qDebug() <<"RABOTAI";
+    qDebug() << "RABOTAI";
 
     setLayout(mainLayout);
 }

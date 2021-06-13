@@ -11,7 +11,9 @@
 
 class feedcard : public QWidget {
 public:
-    feedcard(QString name=nullptr, QString title=nullptr, QString text=nullptr, QPixmap *photoLogo=nullptr, QString photoLogoFile=nullptr);
+    feedcard(QString name = nullptr, QString title = nullptr, QString text = nullptr, QPixmap *photoLogo = nullptr,
+             QString photoLogoFile = nullptr);
+
     ~feedcard();
 
     QVBoxLayout *mainLayout;

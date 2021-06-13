@@ -1,5 +1,6 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
@@ -7,13 +8,13 @@
 #include <QtCore/QSettings>
 #include "webconnector.h"
 
-class LoginWindow : public QMainWindow
-{
-    Q_OBJECT
+class LoginWindow : public QMainWindow {
+Q_OBJECT
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
 
     void resizeEvent(QResizeEvent *event) override;
+
     void checkMainWindow();
 
     QLabel *passwordLabel;
@@ -35,6 +36,7 @@ public:
 
     bool ifExist{};
 public slots:
+
     void openMainWindow();
 
 signals:
