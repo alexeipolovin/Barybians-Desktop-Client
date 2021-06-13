@@ -210,7 +210,8 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             auto message = new Message();
             QJsonObject obj = i.toObject();
 //            obj.find("secondUser").value().toObject().find("id");
-            message->id = document.object().find("secondUser").value().toObject().find("id")->toInt();
+//            message->id = document.object().find("secondUser").value().toObject().find("id")->toInt();
+            message->id = obj.find("senderId").value().toInt();
             if(showDebug)
                 qDebug() << "Message User Id:" << message->id;
             message->text = obj.find("text").value().toString();
@@ -336,8 +337,11 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
 
         break;
     }
-        case ALL_MESSAGES:
-            break;
+    case SEND_MESSAGE:
+        qDebug() << "Hello world..";
+        QByteArray array = reply.readAll();
+        qDebug() << "Sending message ID:" << array;
+        break;
     }
     reply.deleteLater();
     return root;
@@ -381,56 +385,122 @@ User& WebConnector::getMainUser() const
   *
 */
 
+QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data)
+{
+    this->sendingData = std::move(data);
+    qDebug() << "Data is:" << this->sendingData;
+    QNetworkRequest request;
+
+    request.setUrl(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, HEADER_APP_TYPE);
+
+    switch (type) {
+        case AUTH: {
+            this->userState = (bool) "12";
+            request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
+            break;
+        }
+        case ALL_USERS: {
+            standartHeader(request);
+            break;
+        }
+        case ALL_MESSAGES: {
+            standartHeader(request);
+            break;
+
+        }
+        case GET_FEED: {
+            standartHeader(request);
+            break;
+        }
+        case CURRENT_USER: {
+            standartHeader(request);
+            break;
+        }
+        case WRITE_POST: {
+            standartHeader(request);
+            break;
+        }
+        case GET_DIALOGS: {
+            standartHeader(request);
+            break;
+        }
+        case DOWNLOAD_PHOTO: {
+            standartHeader(request);
+            break;
+        }
+        case DIALOG_WITH: {
+            standartHeader(request);
+            break;
+        }
+        case SEND_MESSAGE:
+            standartHeader(request);
+            break;
+        default: {
+            if(showDebug)
+                qDebug() << "Unknown request";
+            break;
+        }
+    }
+    return request;
+}
+
 void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type)
 {
     QNetworkReply *reply;
     switch (type) {
-    case AUTH: {
-        auto *params = new QUrlQuery();
-        params->addQueryItem("username", LOGIN);
-        params->addQueryItem("password", PASSWORD);
+        case AUTH: {
+            auto *params = new QUrlQuery();
+            params->addQueryItem("username", LOGIN);
+            params->addQueryItem("password", PASSWORD);
 
-        reply = manager->post(request, params->toString().toUtf8());
-        break;
-    }
-    case ALL_USERS: {
-        reply = manager->get(request); //??
-        break;
-    }
-    case WRITE_POST: {
-        auto *params = new QUrlQuery();
-        params->addQueryItem("title", "Title");
-        params->addQueryItem("text", "Text");
+            reply = manager->post(request, params->toString().toUtf8());
+            break;
+        }
+        case ALL_USERS: {
+            reply = manager->get(request); //??
+            break;
+        }
+        case WRITE_POST: {
+            auto *params = new QUrlQuery();
+            params->addQueryItem("title", "Title");
+            params->addQueryItem("text", "Text");
 
-        reply = manager->post(request, params->toString().toUtf8());
-        break;
+            reply = manager->post(request, params->toString().toUtf8());
+            break;
+        }
+        case DOWNLOAD_PHOTO: {
+            reply = manager->get(request);
+            break;
+        }
+        case GET_FEED: {
+            reply = manager->get(request);
+            break;
+        }
+        case CURRENT_USER: {
+            reply = manager->get(request);
+            break;
+        }
+        case GET_DIALOGS: {
+            reply = manager->get(request);
+            break;
+        }
+        case ALL_MESSAGES:
+            reply = manager->get(request);
+            break;
+        case DIALOG_WITH:
+            reply = manager->get(request);
+            break;
+        case SEND_MESSAGE:
+            auto *params = new QUrlQuery();
+            qDebug() << "Sending message...";
+            params->addQueryItem("text", sendingData);
+            reply = manager->post(request, params->toString().toUtf8());
+            break;
     }
-    case DOWNLOAD_PHOTO: {
-        reply = manager->get(request);
-        break;
-    }
-    case GET_FEED: {
-        reply = manager->get(request);
-        break;
-    }
-    case CURRENT_USER: {
-        reply = manager->get(request);
-        break;
-    }
-    case GET_DIALOGS: {
-        reply = manager->get(request);
-        break;
-    }
-    case ALL_MESSAGES:
-        reply = manager->get(request);
-        break;
-    case DIALOG_WITH:
-        reply = manager->get(request);
-        break;
-    }
-    connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
-        QJsonObject obj = parseReply(*reply, type, request);
-        reply->deleteLater();
-    });
+        connect(reply, &QNetworkReply::finished, this, [this, reply, type, request]() {
+            QJsonObject obj = parseReply(*reply, type, request);
+            reply->deleteLater();
+        });
 
 }

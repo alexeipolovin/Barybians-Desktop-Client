@@ -47,7 +47,6 @@ UserFeed::UserFeed(WebConnector *webConnector)
 
     connect(listView, &QListView::doubleClicked, this, [listView, webConnector, this](){
         int current_index = listView->currentIndex().row();
-
         openUserPage(current_index, *webConnector->getUsersList(), webConnector);
     });
 }

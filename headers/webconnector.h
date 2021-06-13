@@ -29,6 +29,7 @@ public:
         GET_FEED,
         ALL_MESSAGES,
         DIALOG_WITH,
+        SEND_MESSAGE,
     };
 
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
@@ -58,8 +59,14 @@ public:
 
     void clearMessageList();
 
+
     QVector<Message*>* getMessagesList();
+
+    QNetworkRequest createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data);
+
 private:
+    QByteArray sendingData;
+
     bool showDebug;
 
     QMap<QString,QString>  userPhotoMap;
