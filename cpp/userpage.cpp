@@ -59,6 +59,9 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     auto nameLabel = new QLabel(name);
     auto lastVisitedLabel = new QLabel(lastVisited);
     auto statusLabel = new QLabel(status);
+    auto statusLastVisitLayout = new QVBoxLayout();
+    statusLastVisitLayout->addWidget(lastVisitedLabel);
+    statusLastVisitLayout->addWidget(statusLabel);
 
     auto dialogButton = new QPushButton("Open Dialog");
 
@@ -76,7 +79,7 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
 
     titleLayout->addWidget(profilePhotoLabel);
     titleLayout->addWidget(nameLabel);
-    titleLayout->addWidget(lastVisitedLabel);
+    titleLayout->addLayout(statusLastVisitLayout);
 
     titleLayout->setAlignment(Qt::AlignTop);
 
@@ -88,13 +91,13 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, vector, model, view, icon, id]() {
         qDebug() << "Downloading again...";
         for (auto i : *webConnector->getFeed()) {
-            QStandardItem *item = nullptr;
+            QStandardItem *item;
             qDebug() << "User id" << i->userId;
             qDebug() << "My id" << id;
-            int photoIndex = 0;
             if (i->userId == id) {
                 qDebug() << "user id is" << i->userId;
                 item = new QStandardItem(icon, i->title + "\n" + i->text);
+                item->setEditable(false);
                 model->appendRow(item);
             }
             view->setModel(model);
@@ -102,10 +105,9 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
             }
     );
     for (auto i : *webConnector->getFeed()) {
-        QStandardItem *item = nullptr;
+        QStandardItem *item;
         qDebug() << "User id" << i->userId;
         qDebug() << "My id" << id;
-        int photoIndex = 0;
         if (i->userId == id) {
             qDebug() << "user id is" << i->userId;
             item = new QStandardItem(icon, i->title + "\n" + i->text);

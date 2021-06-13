@@ -15,6 +15,7 @@ DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
     auto widget = new QWidget();
     auto mainLayout = new QVBoxLayout(scrollArea);
     QNetworkRequest request = webConnector->createRequest("https://barybians.ru/api/dialogs/" + QString::number(id), WebConnector::DIALOG_WITH);
+//    setWindowTitle(webConnector->getUsersList()->at(id)->name + " " + webConnector->getUsersList()->at(id)->lastName);
     webConnector->sendRequest(request, WebConnector::DIALOG_WITH);
     connect(webConnector, &WebConnector::messageListReceived, this, [this, webConnector, mainLayout, id, scrollArea, widget](){
        for(auto i: *webConnector->getMessagesList())

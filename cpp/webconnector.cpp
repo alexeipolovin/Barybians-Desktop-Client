@@ -183,11 +183,14 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             qDebug() << "Photo name:" << user->photoName;
             user->id = obj.find("id").value().toInt();
             user->lastVisit = obj.find("lastVisit").value().toString();
+            user->status = obj.find("status").value().toString();
             if(showDebug)
                 qDebug() << "Last Visit:" << user->lastVisit;
-            QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
-            this->photoUrl = user->photoName;
-            sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+            if(!QFile::exists(user->photoName)) {
+                qDebug() << user->photoName;
+                QNetworkRequest networkRequest = createRequest("https://barybians.ru/avatars/" + user->photoName, WebConnector::DOWNLOAD_PHOTO);
+                this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+            }
             userList->push_back(user);
             userPhotoMap.insert(user->photoName, user->photoName);
         }
@@ -281,8 +284,11 @@ QJsonObject WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST
             post->photoPath = "https://barybians.ru/avatars/" + i.toObject().find("author").value().toObject().find("photo")->toString();
             this->photoUrl = i.toObject().find("author").value().toObject().find("photo")->toString();
             post->userId = i.toObject().find("author").value().toObject().find("id")->toInt();
-            QNetworkRequest networkRequest = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
-            this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+            if(!QFile::exists(i.toObject().find("author").value().toObject().find("photo")->toString())) {
+                qDebug() << post->photoPath;
+                QNetworkRequest networkRequest = this->createRequest(post->photoPath, WebConnector::DOWNLOAD_PHOTO);
+                this->sendRequest(networkRequest, WebConnector::DOWNLOAD_PHOTO);
+            }
             post->title = i.toObject().find("title")->toString();
             post->text = i.toObject().find("text")->toString();
 

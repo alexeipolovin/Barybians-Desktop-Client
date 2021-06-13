@@ -7,6 +7,7 @@
 #include <headers/feedpage.h>
 #include <headers/userfeed.h>
 #include <headers/dialogwindow.h>
+#include <headers/navigationbar.h>
 
 /**
   * @brief MainWindow::MainWindow
@@ -23,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
     setWindowTitle("Барыбинцы");
     User *mainUser = &webConnector->getMainUser();
 
-    auto *page = new UserPage(&mainUser->photoName, mainUser->name + "\n" + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector, nullptr, mainUser->id);
+    auto *page = new UserPage(&mainUser->photoName, mainUser->name + " \n" + mainUser->lastName, mainUser->lastVisit, mainUser->status, webConnector, nullptr, mainUser->id);
 
     page->show();
 
@@ -48,6 +49,16 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
     connect(feedPage, &QWidget::destroyed, this, [feedPage](){
         delete feedPage;
     });
+    auto mainLayout = new QVBoxLayout();
+    auto navBar = new NavigationBar();
+
+    mainLayout->addWidget(navBar);
+//    setLayout(mainLayout);
+    auto widget = new QWidget();
+
+    widget->setLayout(mainLayout);
+
+    setCentralWidget(widget);
 
 
 

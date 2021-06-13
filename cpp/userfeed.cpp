@@ -11,7 +11,7 @@
 
 void UserFeed::openUserPage(int index, QVector<User*> userList, WebConnector *webConnector)
 {
-    UserPage *userPage = new UserPage(&userList.at(index)->photoName, userList.at(index)->name + "\n" + userList.at(index)->lastName, userList.at(index)->lastVisit, userList.at(index)->status, webConnector, nullptr, userList.at(index)->id);
+    UserPage *userPage = new UserPage(&userList.at(index)->photoName, userList.at(index)->name + " \n" + userList.at(index)->lastName, userList.at(index)->lastVisit, userList.at(index)->status, webConnector, nullptr, userList.at(index)->id);
     userPage->show();
 }
 
