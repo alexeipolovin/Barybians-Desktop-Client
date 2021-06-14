@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QNetworkAccessManager>
 #include "headers/data.h"
+
 const QString END_LINE = "\n";
 
 /**
@@ -19,19 +20,17 @@ const QString END_LINE = "\n";
   *
 */
 
-User::User()
-{
+User::User() {
 
 }
 
-QString User::getPhotoName()
-{
+QString User::getPhotoName() {
     return this->photoName;
 }
 
-void User::printUserData()
-{
-    qDebug() << "name" << this->name << END_LINE << "lastName" << this->lastName << END_LINE << "id" << this->id << END_LINE << "status" << this->status;
+void User::printUserData() {
+    qDebug() << "name" << this->name << END_LINE << "lastName" << this->lastName << END_LINE << "id" << this->id
+             << END_LINE << "status" << this->status;
 }
 
 
@@ -43,12 +42,12 @@ void User::printUserData()
  * Класс, который служит чтобы обработать приходящий запрос в json
  *
  */
-Post::Post()
-{
+Post::Post() {
 
 }
-void Post::printData()
-{
-    qDebug() << "Title" << this->title << END_LINE << "Text" << this->text << END_LINE << "Date" << this->date << "Edited" << this->edited;
+
+void Post::printData() {
+    qDebug() << "Title" << this->title << END_LINE << "Text" << this->text << END_LINE << "Date" << this->date
+             << "Edited" << this->edited;
 }
 

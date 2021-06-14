@@ -20,8 +20,11 @@ DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
     webConnector->sendRequest(request, WebConnector::DIALOG_WITH);
     connect(webConnector, &WebConnector::messageListReceived, this,
             [this, webConnector, mainLayout, id, scrollArea, widget]() {
-                for (auto i: *webConnector->getMessagesList()) {
-                    MessageCard *messageCard = nullptr;
+                qDebug() << "Dialog id:" << id;
+                qDebug() << "Vector length:" << webConnector->getMessagesList()[id].length();
+                auto mVector = webConnector->getMessagesList()[id];
+                for (auto i: mVector) {
+                    MessageCard *messageCard;
                     if (i->id == id) {
                         qDebug() << "User id:" << i->id;
                         qDebug() << "Self id:" << id;
@@ -30,7 +33,11 @@ DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
                         qDebug() << "User id:" << i->id;
                         qDebug() << "Self id:" << id;
                         qDebug() << false;
-                        messageCard = new MessageCard(webConnector->mainUser->photoName, i->text, false);
+                        for(auto j : *webConnector->getUsersList()) {
+                            if(j->id == id) {
+                                messageCard = new MessageCard(j->photoName, i->text, false);
+                            }
+                        }
                     }
                     mainLayout->addWidget(messageCard);
                     widget->setLayout(mainLayout);
@@ -45,8 +52,7 @@ DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
                 sendMessageLay->addWidget(sendMessageButton);
                 mainLay->addLayout(sendMessageLay);
                 setLayout(mainLay);
-                show();
-                connect(sendMessageButton, &QPushButton::clicked, this, [this, webConnector, id, textInput]() {
+                connect(sendMessageButton, &QPushButton::clicked, this, [webConnector, id, textInput]() {
                     QNetworkRequest request1 = webConnector->createPostRequest(
                             "https://barybians.ru/api/dialogs/" + QString::number(id), WebConnector::SEND_MESSAGE,
                             textInput->text().toUtf8());

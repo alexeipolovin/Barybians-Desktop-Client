@@ -24,7 +24,7 @@ MessageCard::MessageCard(QString photoPath, QString text, bool isSelf) : QWidget
 
     layout->addWidget(photo);
     layout->addWidget(label);
-    if (isSelf)
+    if (!isSelf)
         layout->setAlignment(Qt::AlignLeft);
     else
         layout->setAlignment(Qt::AlignRight);

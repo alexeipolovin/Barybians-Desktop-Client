@@ -21,13 +21,15 @@ const QByteArray AUTHORIZATION = "Authorization";
 /**
   * @brief WebConnector::WebConnector
   *
-  * @author Polovin Alexei (alexeipolovin@gmail.com)
+  * @author Polovin Alexei
   *
-  * Класс, отвечающий за взаимодействие с REST API https://barybians.ru/api/
+  * @param bool showDebug
+  *
+  * @description Класс, отвечающий за взаимодействие с REST API https://barybians.ru/api/
 */
 
 WebConnector::WebConnector(bool showDebug) {
-    messagesList = new QVector<Message *>;
+    messagesList = new QMap<int, QVector<Message *>>;
     mainUser = new User();
     this->showDebug = showDebug;
     feed = new QVector<Post *>;
@@ -39,6 +41,16 @@ WebConnector::WebConnector(bool showDebug) {
     manager = new QNetworkAccessManager();
 }
 
+
+/**
+ * @brief WebConnector::checkAuth
+ *
+ * @author Polovin Alexei
+ *
+ * @param none
+ *
+ * Проверка наличия сохранённого логина и пароля в настройках
+ * */
 bool WebConnector::checkAuth() {
     QString login = settings->value("login").toString();
     QString password = settings->value("password").toString();
@@ -54,6 +66,17 @@ bool WebConnector::checkAuth() {
     }
 }
 
+/**
+ * @brief WebConnector::checkAuth
+ *
+ * @author Polovin Alexei
+ *
+ * @param QString login
+ * @param QString password
+ *
+ * Проверка наличия сохранённого логина и пароля в настройках
+ * */
+
 void WebConnector::setLoginAndPassword(QString login, QString password) {
     this->LOGIN = qMove(login);
     this->PASSWORD = qMove(password);
@@ -67,10 +90,11 @@ void WebConnector::standartHeader(QNetworkRequest &request) {
 /**
  * @brief WebConnector::createRequest
  *
- * @param url
- * @param type
+ * @param const QString url
+ * @param WebConnector::REQUEST_TYPE type
  *
- * @author Polovin Alexei (alexeipolovin@gmail.com)
+ * @author Polovin Alexei
+ *
  * @returns QNetworkRequest reply
  *
  * Подготавливает и возвращает запрос
@@ -130,11 +154,31 @@ QNetworkRequest WebConnector::createRequest(const QString &url, WebConnector::RE
     return request;
 }
 
+/**
+ * @brief WebConnector::makeAuth
+ *
+ * @author Polovin Alexei
+ *
+ * @param none
+ *
+ * Произвести аутентификацию
+ * */
+
 void WebConnector::makeAuth() {
     QNetworkRequest request = this->createRequest("https://barybians.ru/api/auth", WebConnector::AUTH);
     this->sendRequest(request, WebConnector::AUTH);
 }
 
+/**
+ * @brief WebConnector::cachePhoto
+ *
+ * @author Polovin Alexei
+ *
+ * @param QNetworkReply *reply_photo
+ * @param  const QNetworkRequest &request
+ *
+ * Проверка наличия сохранённого логина и пароля в настройках
+ * */
 
 void WebConnector::cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest &request) {
     QByteArray array = reply_photo->readAll();
@@ -197,22 +241,27 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             QByteArray array = reply.readAll();
             QJsonDocument document = QJsonDocument::fromJson(array);
             QJsonArray jsonArray = document.object().find("messages")->toArray();
+            auto temp_vector = *new QVector<Message *>;
             qDebug() << document;
+            int id = 0;
             for (auto i: jsonArray) {
                 if (showDebug)
                     qDebug() << i;
                 auto message = new Message();
                 QJsonObject obj = i.toObject();
-//            obj.find("secondUser").value().toObject().find("id");
-//            message->id = document.object().find("secondUser").value().toObject().find("id")->toInt();
-                message->id = obj.find("senderId").value().toInt();
+                message->id = obj.find("receiverId").value().toInt();
                 if (showDebug)
                     qDebug() << "Message User Id:" << message->id;
                 message->text = obj.find("text").value().toString();
                 if (showDebug)
                     qDebug() << "Message text:" << message->text;
-                messagesList->push_back(message);
+                temp_vector.push_back(message);
+                qDebug() << "Temp Vector Length:" << temp_vector.length();
+                id = message->id;
             }
+            qDebug() << "New Id is:" << id;
+            if(!this->messagesList->contains(id))
+                this->messagesList->insert(id, temp_vector);
             emit messageListReceived();
             break;
         }
@@ -354,8 +403,8 @@ QVector<User *> *WebConnector::getUsersList() {
     return this->userList;
 }
 
-QVector<Message *> *WebConnector::getMessagesList() {
-    return this->messagesList;
+QMap<int, QVector<Message *>> WebConnector::getMessagesList() {
+    return *this->messagesList;
 }
 
 QString WebConnector::getToken() const {
@@ -365,6 +414,9 @@ QString WebConnector::getToken() const {
 
 User &WebConnector::getMainUser() const {
     return *this->mainUser;
+}
+
+void WebConnector::clearMessageList() {
 }
 
 
@@ -381,7 +433,7 @@ User &WebConnector::getMainUser() const {
 */
 
 QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data) {
-    this->sendingData = std::move(data);
+    this->sendingData = qMove(data);
     qDebug() << "Data is:" << this->sendingData;
     QNetworkRequest request;
 

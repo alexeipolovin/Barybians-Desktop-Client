@@ -62,7 +62,7 @@ public:
     void clearMessageList();
 
 
-    QVector<Message *> *getMessagesList();
+    QMap<int, QVector<Message *>> getMessagesList();
 
     QNetworkRequest createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data);
 
@@ -74,7 +74,7 @@ private:
     QMap<QString, QString> userPhotoMap;
     QVector<User *> *userList;
 
-    QVector<Message *> *messagesList;
+    QMap<int, QVector<Message *>> *messagesList;
 
     QVector<Post *> *feed;
 

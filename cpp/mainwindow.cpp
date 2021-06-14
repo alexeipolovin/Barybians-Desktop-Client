@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
 
     webConnector->sendRequest(request1, WebConnector::ALL_USERS);
 
-    DialogWindow *window = new DialogWindow(webConnector, 4);
+//    auto *window = new DialogWindow(webConnector, 4);
 
     FeedPage *feedPage = nullptr;
     connect(webConnector, &WebConnector::usersList, this, [webConnector, feedPage]() mutable {

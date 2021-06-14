@@ -10,6 +10,7 @@
 #include "headers/userfeed.h"
 
 void UserFeed::openUserPage(int index, QVector<User *> userList, WebConnector *webConnector) {
+    qDebug() << "ADF:" << userList.at(index)->id;
     UserPage *userPage = new UserPage(&userList.at(index)->photoName,
                                       userList.at(index)->name + " \n" + userList.at(index)->lastName,
                                       userList.at(index)->lastVisit, userList.at(index)->status, webConnector, nullptr,
@@ -44,6 +45,7 @@ UserFeed::UserFeed(WebConnector *webConnector) {
     setLayout(mainLayout);
 
     connect(listView, &QListView::doubleClicked, this, [listView, webConnector, this]() {
+        qDebug() << "Current selected index:" << listView->currentIndex().row();
         int current_index = listView->currentIndex().row();
         openUserPage(current_index, *webConnector->getUsersList(), webConnector);
     });

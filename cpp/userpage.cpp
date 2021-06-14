@@ -29,6 +29,7 @@
 #include <QtWidgets/QPushButton>
 #include <QListView>
 #include <QStandardItemModel>
+#include <headers/dialogwindow.h>
 #include "headers/userpage.h"
 
 UserPage::~UserPage() = default;
@@ -62,7 +63,7 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     statusLastVisitLayout->addWidget(statusLabel);
 
     auto dialogButton = new QPushButton("Open Dialog");
-
+    auto writePostButton = new QPushButton("WritePost");
     if (profilePhoto != nullptr) {
         profilePhotoLabel->setPixmap(*profilePhoto);
     } else {
@@ -81,9 +82,18 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     titleLayout->setAlignment(Qt::AlignTop);
 
     mainLayout->addLayout(titleLayout);
-    mainLayout->addWidget(dialogButton);
+    if (webConnector->mainUser->id == id)
+        mainLayout->addWidget(writePostButton);
+    if (webConnector->mainUser->id != id)
+        mainLayout->addWidget(dialogButton);
 
     auto vector = webConnector->getUsersList();
+
+    connect(dialogButton, &QPushButton::clicked, this, [webConnector, id]() {
+        qDebug() << "New user id:" << id;
+        auto dialogWindow = new DialogWindow(webConnector, id);
+        dialogWindow->show();
+    });
 
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, vector, model, view, icon, id]() {
                 qDebug() << "Downloading again...";
