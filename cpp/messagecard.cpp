@@ -22,11 +22,15 @@ MessageCard::MessageCard(QString photoPath, QString text, bool isSelf) : QWidget
     pm = pm.scaled(64, 64);
     photo->setPixmap(pm);
 
-    layout->addWidget(photo);
-    layout->addWidget(label);
-    if (!isSelf)
+
+    if (!isSelf) {
+        layout->addWidget(photo);
+        layout->addWidget(label);
         layout->setAlignment(Qt::AlignLeft);
-    else
+    } else {
+        layout->addWidget(label);
+        layout->addWidget(photo);
         layout->setAlignment(Qt::AlignRight);
+    }
     setLayout(layout);
 }

@@ -1,8 +1,6 @@
 //
 // Created by Kernux on 05.06.2021.
 //
-
-#include "headers/feedcard.h"
 #include "headers/feedpage.h"
 #include <QtWidgets/QListView>
 #include <QStandardItemModel>

@@ -55,7 +55,7 @@ else()
             headers/loginwindow.h
             cpp/loginwindow.cpp
             res.qrc
-            cpp/userpage.cpp headers/userpage.h cpp/feedpage.cpp headers/feedpage.h cpp/feedcard.cpp headers/feedcard.h cpp/userfeed.cpp headers/userfeed.h cpp/dialogwindow.cpp headers/dialogwindow.h cpp/messagecard.cpp headers/messagecard.h cpp/navigationbar.cpp headers/navigationbar.h)
+            cpp/userpage.cpp headers/userpage.h cpp/feedpage.cpp headers/feedpage.h cpp/userfeed.cpp headers/userfeed.h cpp/dialogwindow.cpp headers/dialogwindow.h cpp/messagecard.cpp headers/messagecard.h cpp/navigationbar.cpp headers/navigationbar.h cpp/feedlistmodel.cpp headers/feedlistmodel.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
