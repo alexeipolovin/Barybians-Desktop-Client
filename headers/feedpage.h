@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
+#include <QStandardItem>
 #include "webconnector.h"
 
 class FeedPage : public QWidget {
@@ -19,6 +20,9 @@ public:
     QToolBar *toolBar;
 
     QVBoxLayout *mainLayout;
+
+private:
+    QVector<QStandardItem *>  *m_list;
 };
 
 

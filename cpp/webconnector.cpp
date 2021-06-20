@@ -385,11 +385,15 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
 
             break;
         }
-        case SEND_MESSAGE:
+        case SEND_MESSAGE: {
             qDebug() << "Hello world..";
             QByteArray array = reply.readAll();
             qDebug() << "Sending message ID:" << array;
             break;
+        }
+        case ALL_MESSAGES: {
+            break;
+        }
     }
     reply.deleteLater();
     return root;

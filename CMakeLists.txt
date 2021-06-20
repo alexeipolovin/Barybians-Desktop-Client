@@ -48,10 +48,6 @@ else()
             headers/webconnector.h
             cpp/data.cpp
             headers/data.h
-            cpp/logincontroller.cpp
-            headers/logincontroller.h
-            cpp/drawercontroller.cpp
-            headers/drawercontroller.h
             headers/loginwindow.h
             cpp/loginwindow.cpp
             res.qrc

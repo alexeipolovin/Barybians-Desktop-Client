@@ -8,13 +8,15 @@
 #include <QPainter>
 #include <QTableView>
 #include <QTableWidget>
+#include <headers/feedlistmodel.h>
 
 //TODO: Оптимизировать это
-FeedPage::FeedPage(WebConnector *webConnector) {
+FeedPage::FeedPage(WebConnector *webConnector) : QWidget(nullptr) {
+    m_list = new QVector<QStandardItem *>;
     setWindowIcon(QIcon(":/static/images/flex.png"));
     mainLayout = new QVBoxLayout();
     auto *listView = new QListView();
-    auto *model = new QStandardItemModel();
+    auto *model = new FeedListModel(webConnector);
     auto vector = webConnector->getUsersList();
 
     connect(webConnector, &WebConnector::feedOk, this, [this, webConnector, model, listView, vector]() {
@@ -22,38 +24,23 @@ FeedPage::FeedPage(WebConnector *webConnector) {
         QPixmap pm;
         for (auto i: *webConnector->getFeed()) {
             QStandardItem *item = nullptr;
-//            connect(webConnector, &WebConnector::pixmapUpdated, this, [this, i, item, model]() mutable
-//            {
             int photoIndex = 0;
             for (auto j : *vector) {
                 if (j->id == i->userId) {
                     photoIndex = vector->indexOf(j);
                 }
             }
-
-//                qDebug() << "User id:" << i->userId;
-//                qDebug() << "Length:" << vector->indexOf(i->userId);
             if (vector->at(photoIndex)->photoName != "") {
-//                    qDebug() << "File name:" << vector->at(photoIndex)->photoName;
                 QFile file(vector->at(photoIndex)->photoName);
                 if (file.open(QFile::ReadOnly)) {
                     pm.loadFromData(file.readAll());
                     item = new QStandardItem(pm, i->title + "\n" + i->text);
-//                        auto *brush = new QBrush(pm);
-//                        item->setBackground(*brush);
-//                        delete brush;
-//                        item->setEditable(false);
                 } else {
-//                        qDebug() << "Free File";
-//                        item = new QStandardItem(webConnector->lastPixmap, i->title + "\n" + i->text);
-//                        item->setEditable(false);
                 }
                 file.deleteLater();
             }
-
-            model->appendRow(item);
-//            });
-//            feedcard *feedCard = new feedcard(i->name, i->title, i->text, nullptr, i->photoPath);
+            m_list->push_back(item);
+            model->insertRow(0);
         }
         listView->setModel(model);
         connect(listView, &QListView::clicked, this, [listView]() {
@@ -68,5 +55,8 @@ FeedPage::FeedPage(WebConnector *webConnector) {
 }
 
 FeedPage::~FeedPage() {
+    qDebug() << "Feed Page destruction";
+    qDeleteAll(*m_list);
+    delete m_list;
     delete mainLayout;
 }

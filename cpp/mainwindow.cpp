@@ -43,10 +43,11 @@ MainWindow::MainWindow(QWidget *parent, WebConnector *webConnector) : QMainWindo
     connect(webConnector, &WebConnector::usersList, this, [webConnector, feedPage]() mutable {
         auto *userFeed = new UserFeed(webConnector);
         userFeed->show();
-//        feedPage = new FeedPage(webConnector);
-//        feedPage->show();
+        feedPage = new FeedPage(webConnector);
+        feedPage->setAttribute(Qt::WA_DeleteOnClose);
+        feedPage->show();
     });
-    connect(feedPage, &QWidget::destroyed, this, [feedPage]() {
+    connect(feedPage, &FeedPage::destroyed, this, [feedPage]() mutable {
         delete feedPage;
     });
     auto mainLayout = new QVBoxLayout();
