@@ -6,7 +6,7 @@
 #include <QPixmap>
 #include <QHBoxLayout>
 #include <QLabel>
-#include "headers/messagecard.h"
+#include "headers/models/messagecard.h"
 
 MessageCard::MessageCard(QString photoPath, QString text, bool isSelf) : QWidget() {
     QFile file(photoPath);

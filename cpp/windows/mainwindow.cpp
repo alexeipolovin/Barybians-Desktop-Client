@@ -1,13 +1,13 @@
-#include "headers/mainwindow.h"
+#include "headers/windows/mainwindow.h"
 
 #include <QGuiApplication>
 #include <QLineEdit>
 #include <QtQml/QQmlApplicationEngine>
-#include "headers/userpage.h"
-#include <headers/feedpage.h>
-#include <headers/userfeed.h>
-#include <headers/dialogwindow.h>
-#include <headers/navigationbar.h>
+#include "headers/windows/userpage.h"
+#include <headers/windows/feedpage.h>
+#include <headers/models/userfeed.h>
+#include <headers/windows/dialogwindow.h>
+#include <headers/models/navigationbar.h>
 
 /**
   * @brief MainWindow::MainWindow

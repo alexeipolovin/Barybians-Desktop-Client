@@ -1,12 +1,12 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "-Wclazy-qt-macros"
 
-#include "headers/mainwindow.h"
+#include "headers/windows/mainwindow.h"
 
 #include <QApplication>
 #include <QWindow>
 #include <QWidget>
-#include "headers/loginwindow.h"
+#include "headers/windows/loginwindow.h"
 #include <QStyleFactory>
 #include <qglobal.h>
 

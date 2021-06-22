@@ -9,7 +9,7 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QStandardItem>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class FeedPage : public QWidget {
 public:

@@ -1,14 +1,14 @@
 //
 // Created by Kernux on 05.06.2021.
 //
-#include "headers/feedpage.h"
+#include "headers/windows/feedpage.h"
 #include <QtWidgets/QListView>
 #include <QStandardItemModel>
 #include <QtCore/QFile>
 #include <QPainter>
 #include <QTableView>
 #include <QTableWidget>
-#include <headers/feedlistmodel.h>
+#include <headers/models/feedlistmodel.h>
 
 //TODO: Оптимизировать это
 FeedPage::FeedPage(WebConnector *webConnector) : QWidget(nullptr) {

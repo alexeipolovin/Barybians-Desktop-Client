@@ -2,12 +2,12 @@
 // Created by Kernux on 13.06.2021.
 //
 
-#include <headers/messagecard.h>
+#include <headers/models/messagecard.h>
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QLineEdit>
 #include <QPushButton>
-#include "headers/dialogwindow.h"
+#include "headers/windows/dialogwindow.h"
 
 DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
     auto scrollArea = new QScrollArea(this);

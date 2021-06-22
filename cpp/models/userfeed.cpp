@@ -6,8 +6,8 @@
 #include <QVBoxLayout>
 #include <QStandardItemModel>
 #include <QFile>
-#include <headers/userpage.h>
-#include "headers/userfeed.h"
+#include <headers/windows/userpage.h>
+#include "headers/models/userfeed.h"
 
 void UserFeed::openUserPage(int index, QVector<User *> userList, WebConnector *webConnector) {
     qDebug() << "ADF:" << userList.at(index)->id;

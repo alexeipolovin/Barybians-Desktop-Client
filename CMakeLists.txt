@@ -42,16 +42,16 @@ if(ANDROID)
 else()
     add_executable(Barybians-Desktop-Client
             cpp/main.cpp
-            cpp/mainwindow.cpp
-            headers/mainwindow.h
+            cpp/windows/mainwindow.cpp
+            headers/windows/mainwindow.h
             cpp/webconnector.cpp
             headers/webconnector.h
             cpp/data.cpp
             headers/data.h
-            headers/loginwindow.h
-            cpp/loginwindow.cpp
+            headers/windows/loginwindow.h
+            cpp/windows/loginwindow.cpp
             res.qrc
-            cpp/userpage.cpp headers/userpage.h cpp/feedpage.cpp headers/feedpage.h cpp/userfeed.cpp headers/userfeed.h cpp/dialogwindow.cpp headers/dialogwindow.h cpp/messagecard.cpp headers/messagecard.h cpp/navigationbar.cpp headers/navigationbar.h cpp/feedlistmodel.cpp headers/feedlistmodel.h)
+            cpp/windows/userpage.cpp headers/windows/userpage.h cpp/windows/feedpage.cpp headers/windows/feedpage.h cpp/models/userfeed.cpp headers/models/userfeed.h cpp/windows/dialogwindow.cpp headers/windows/dialogwindow.h cpp/models/messagecard.cpp headers/models/messagecard.h cpp/models/navigationbar.cpp headers/models/navigationbar.h cpp/models/feedlistmodel.cpp headers/models/feedlistmodel.h)
 endif()
 
 target_link_libraries(Barybians-Desktop-Client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

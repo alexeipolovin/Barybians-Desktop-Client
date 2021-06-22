@@ -7,7 +7,7 @@
 
 
 #include <QAbstractListModel>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class FeedListModel : public QAbstractListModel {
 public:

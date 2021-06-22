@@ -8,7 +8,7 @@
 
 #include <QWidget>
 #include <QMainWindow>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class DialogWindow : public QWidget {
 

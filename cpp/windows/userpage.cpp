@@ -30,8 +30,8 @@
 #include <QListView>
 #include <QStandardItemModel>
 #include <qtoolbar.h>
-#include <headers/dialogwindow.h>
-#include "headers/userpage.h"
+#include <headers/windows/dialogwindow.h>
+#include "headers/windows/userpage.h"
 
 UserPage::~UserPage() = default;
 

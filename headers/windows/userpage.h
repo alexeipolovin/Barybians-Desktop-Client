@@ -30,7 +30,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class UserPage : public QWidget {
 

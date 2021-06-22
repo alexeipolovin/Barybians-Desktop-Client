@@ -1,5 +1,5 @@
-#include "headers/loginwindow.h"
-#include "headers/mainwindow.h"
+#include "headers/windows/loginwindow.h"
+#include "headers/windows/mainwindow.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -46,7 +46,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
 
         hide();
     }
-
     setWindowIcon(QIcon(":/static/images/flex.png"));
 
     auto *centerContainer = new QFrame();
@@ -93,7 +92,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
                             "{"
                             "border: 1px solid #282830;"
                             "color: black;"
-                            //                            "background-color:#282830;"
                             "font-size: 15px;"
                             "height:17px;"
                             "width:400px;"
@@ -106,8 +104,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
     QString buttonStyle = "QPushButton "
                           "{"
                           "color: white;"
-                          //                          "color: #282830;"
-                          //                          FONT_SIZE
                           "background-color: black;"
                           "margin-bottom:20px;"
                           "margin-top:20px;"
@@ -125,7 +121,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
     QString labelStyle = "QLabel "
                          "{"
                          "color: black;"
-                         //                         "color: rgb(255, 255, 255);"
                          "margin-left:20px;"
                          "margin-right:20px;"
                          "}";
@@ -159,7 +154,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
     loginButton->setFont(QFont("Arial", 12));
 
     centerLayout->addWidget(logoIcon);
-//    centerLayout->addWidget(loginTextLabel);
     centerLayout->addWidget(loginLabel);
     centerLayout->addWidget(loginEdit);
     centerLayout->addWidget(passwordLabel);
@@ -207,14 +201,11 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
     passwordEdit->setGraphicsEffect(passwordFadeEffect);
     loginLabel->setGraphicsEffect(loginLabelFadeEffect);
     passwordLabel->setGraphicsEffect(passwordLabelFadeEffect);
-//    loginButton->setGraphicsEffect(eEffect);
 
     auto *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
     auto *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
     auto *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
     auto *passwordLabelAnimation = new QPropertyAnimation(passwordLabelFadeEffect, "opacity");
-//    auto *paAnimation = new QPropertyAnimation(eEffect, "color");
-
 
     loginAnimation->setEasingCurve(QEasingCurve::InOutQuad);
     passwordAnimation->setEasingCurve(QEasingCurve::InOutQuad);
@@ -225,31 +216,21 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
     passwordAnimation->setDuration(STANDART_ANIMATION_DURATION);
     loginLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
     passwordLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
-//    paAnimation->setDuration(STANDART_ANIMATION_DURATION);
 
     loginAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     passwordAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     loginLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     passwordLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
 
-//    paAnimation->setStartValue(QColor(Qt::blue));
-
     loginAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     passwordAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     loginLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     passwordLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
 
-//    paAnimation->setEndValue(QColor(Qt::black));
-
     passwordAnimation->start();
     loginAnimation->start();
     loginLabelAnimation->start();
     passwordLabelAnimation->start();
-//    paAnimation->start();
-
-
-//    qDebug() << QFile::open(":/static/images/bg.jpg");
-//    QPixmap background(":/static/images/bg.jpg");
 
     QPalette pallete;
 
@@ -258,7 +239,6 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
     gradient.setColorAt(0, QColor("#AA076B"));
     gradient.setColorAt(1, QColor("#61045F"));
 
-//    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
     pallete.setBrush(QPalette::Background, gradient);
     setPalette(pallete);
 

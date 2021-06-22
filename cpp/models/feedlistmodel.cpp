@@ -2,7 +2,7 @@
 // Created by Kernux on 15.06.2021.FPF{P
 //
 
-#include "headers/feedlistmodel.h"
+#include "headers/models/feedlistmodel.h"
 #include <QFile>
 
 FeedListModel::FeedListModel(WebConnector *webConnector) : QAbstractListModel() {

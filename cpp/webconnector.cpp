@@ -204,7 +204,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             QJsonDocument document = QJsonDocument::fromJson(array);
             QJsonArray jsonArray = document.array();
             QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-            for (auto i : jsonArray) {
+            for (auto i : qAsConst(jsonArray)) {
                 if (showDebug)
                     qDebug() << i;
                 User *user = new User();
@@ -244,7 +244,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             QVector<Message *> *temp_vector = new QVector<Message *>;
             qDebug() << document;
             int id = 0;
-            for (auto i: jsonArray) {
+            for (const auto &i: qAsConst(jsonArray)) {
                 if (showDebug)
                     qDebug() << i;
                 auto message = new Message();
@@ -316,7 +316,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             if (showDebug)
                 qDebug() << val;
             int n = 0;
-            for (auto i:jsonArray) {
+            for (const auto &i:qAsConst(jsonArray)) {
                 if (showDebug)
                     qDebug() << n;
                 n++;
@@ -353,6 +353,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
                 if (newDoc->open(QIODevice::WriteOnly))
                     newDoc->write(imageData);
             }
+            delete newDoc;
             break;
         }
         case WRITE_POST: {

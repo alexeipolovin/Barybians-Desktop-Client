@@ -7,7 +7,7 @@
 
 
 #include <QWidget>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class UserFeed : public QWidget {
 public:

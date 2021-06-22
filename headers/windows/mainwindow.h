@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 #include <QLineEdit>
 #include <QMainWindow>

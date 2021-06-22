@@ -6,7 +6,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QtCore/QSettings>
-#include "webconnector.h"
+#include "headers/webconnector.h"
 
 class LoginWindow : public QMainWindow {
 Q_OBJECT

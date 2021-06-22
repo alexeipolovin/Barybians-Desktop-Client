@@ -4,7 +4,7 @@
 
 #include <QHBoxLayout>
 #include <QPushButton>
-#include "headers/navigationbar.h"
+#include "headers/models/navigationbar.h"
 
 NavigationBar::NavigationBar() : QWidget() {
     auto mainLayout = new QHBoxLayout();
