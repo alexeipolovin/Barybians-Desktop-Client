@@ -72,6 +72,15 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
 
     loginButton = new QPushButton("Login");
 
+    QLinearGradient buttonGradient(0,0,0,loginButton->height());
+    buttonGradient.setColorAt(0, QColor("#FF512F"));
+    buttonGradient.setColorAt(1, QColor("#DD2476"));
+
+    QPalette buttonPalette;
+
+    buttonPalette.setBrush(QPalette::Background, buttonGradient);
+    loginButton->setPalette(buttonPalette);
+
     QString centerQSS = "QFrame "
                         "{"
                         "background-color: white;"
@@ -187,7 +196,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
 */
 
 void LoginWindow::resizeEvent(QResizeEvent *event) {
-    auto *eEffect = new QGraphicsColorizeEffect(loginButton);
+//    auto *eEffect = new QGraphicsColorizeEffect(loginButton);
 
     auto *loginFadeEffect = new QGraphicsOpacityEffect(loginEdit);
     auto *passwordFadeEffect = new QGraphicsOpacityEffect(passwordEdit);
@@ -198,13 +207,13 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
     passwordEdit->setGraphicsEffect(passwordFadeEffect);
     loginLabel->setGraphicsEffect(loginLabelFadeEffect);
     passwordLabel->setGraphicsEffect(passwordLabelFadeEffect);
-    loginButton->setGraphicsEffect(eEffect);
+//    loginButton->setGraphicsEffect(eEffect);
 
     auto *loginAnimation = new QPropertyAnimation(loginFadeEffect, "opacity");
     auto *passwordAnimation = new QPropertyAnimation(passwordFadeEffect, "opacity");
     auto *loginLabelAnimation = new QPropertyAnimation(loginLabelFadeEffect, "opacity");
     auto *passwordLabelAnimation = new QPropertyAnimation(passwordLabelFadeEffect, "opacity");
-    auto *paAnimation = new QPropertyAnimation(eEffect, "color");
+//    auto *paAnimation = new QPropertyAnimation(eEffect, "color");
 
 
     loginAnimation->setEasingCurve(QEasingCurve::InOutQuad);
@@ -216,36 +225,41 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
     passwordAnimation->setDuration(STANDART_ANIMATION_DURATION);
     loginLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
     passwordLabelAnimation->setDuration(STANDART_ANIMATION_DURATION);
-    paAnimation->setDuration(STANDART_ANIMATION_DURATION);
+//    paAnimation->setDuration(STANDART_ANIMATION_DURATION);
 
     loginAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     passwordAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     loginLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
     passwordLabelAnimation->setStartValue(STANDART_START_ANIMATION_VALUE);
 
-    paAnimation->setStartValue(QColor(Qt::blue));
+//    paAnimation->setStartValue(QColor(Qt::blue));
 
     loginAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     passwordAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     loginLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
     passwordLabelAnimation->setEndValue(STANDART_END_ANIMATION_VALUE);
 
-    paAnimation->setEndValue(QColor(Qt::black));
+//    paAnimation->setEndValue(QColor(Qt::black));
 
     passwordAnimation->start();
     loginAnimation->start();
     loginLabelAnimation->start();
     passwordLabelAnimation->start();
-    paAnimation->start();
+//    paAnimation->start();
 
 
 //    qDebug() << QFile::open(":/static/images/bg.jpg");
-    QPixmap background(":/static/bg.jpg");
+//    QPixmap background(":/static/images/bg.jpg");
 
     QPalette pallete;
 
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
-    pallete.setBrush(QPalette::Background, background);
+    QLinearGradient gradient(0,0,0, this->height());
+
+    gradient.setColorAt(0, QColor("#AA076B"));
+    gradient.setColorAt(1, QColor("#61045F"));
+
+//    background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    pallete.setBrush(QPalette::Background, gradient);
     setPalette(pallete);
 
     QMainWindow::resizeEvent(event);

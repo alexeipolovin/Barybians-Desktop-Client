@@ -1,5 +1,5 @@
 #set(CMAKE_PREFIX_PATH  "E:\\Qt\\5.15.2\\mingw81_64")
-set(CMAKE_PREFIX_PATH  "C:\\Qt\\5.15.1\\mingw81_64")
+#set(CMAKE_PREFIX_PATH  "C:\\Qt\\5.15.1\\mingw81_64")
 cmake_minimum_required(VERSION 3.5)
 
 project(Barybians-Desktop-Client LANGUAGES CXX)

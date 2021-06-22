@@ -23,8 +23,8 @@ DialogWindow::DialogWindow(WebConnector *webConnector, int id) {
                 qDebug() << "Dialog id:" << id;
                 qDebug() << "Vector length:" << webConnector->getMessagesList()[id].length();
                 auto mVector = webConnector->getMessagesList()[id];
-                for (auto i: mVector) {
-                    MessageCard *messageCard;
+                for (auto i: qAsConst(mVector)) {
+                    MessageCard *messageCard = nullptr;
                     if (i->id == id) {
                         qDebug() << "User id:" << i->id;
                         qDebug() << "Self id:" << id;

@@ -29,6 +29,7 @@
 #include <QtWidgets/QPushButton>
 #include <QListView>
 #include <QStandardItemModel>
+#include <qtoolbar.h>
 #include <headers/dialogwindow.h>
 #include "headers/userpage.h"
 
@@ -48,6 +49,8 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
 //    QStringList list = name.split(*re);
     setWindowTitle(name);
     this->resize(300, 300);
+
+
     mainLayout = new QVBoxLayout();
     titleLayout = new QHBoxLayout();
 
@@ -64,6 +67,7 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
 
     auto dialogButton = new QPushButton("Open Dialog");
     auto writePostButton = new QPushButton("WritePost");
+    auto exitButton = new QPushButton("Exit");
     if (profilePhoto != nullptr) {
         profilePhotoLabel->setPixmap(*profilePhoto);
     } else {
@@ -86,6 +90,14 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
         mainLayout->addWidget(writePostButton);
     if (webConnector->mainUser->id != id)
         mainLayout->addWidget(dialogButton);
+    mainLayout->addWidget(exitButton);
+
+    connect(exitButton, &QPushButton::clicked, this, []() {
+       QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
+       settings->setValue("login", "");
+       settings->setValue("passwd", "");
+       delete settings;
+    });
 
     auto vector = webConnector->getUsersList();
 

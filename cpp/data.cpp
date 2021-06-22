@@ -33,6 +33,8 @@ void User::printUserData() {
              << END_LINE << "status" << this->status;
 }
 
+User::~User() = default;
+
 
 /**
  * @brief Post::Post
@@ -51,3 +53,4 @@ void Post::printData() {
              << "Edited" << this->edited;
 }
 
+Post::~Post() = default;

@@ -241,7 +241,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             QByteArray array = reply.readAll();
             QJsonDocument document = QJsonDocument::fromJson(array);
             QJsonArray jsonArray = document.object().find("messages")->toArray();
-            auto temp_vector = *new QVector<Message *>;
+            QVector<Message *> *temp_vector = new QVector<Message *>;
             qDebug() << document;
             int id = 0;
             for (auto i: jsonArray) {
@@ -255,14 +255,16 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
                 message->text = obj.find("text").value().toString();
                 if (showDebug)
                     qDebug() << "Message text:" << message->text;
-                temp_vector.push_back(message);
-                qDebug() << "Temp Vector Length:" << temp_vector.length();
+                temp_vector->push_back(message);
+                qDebug() << "Temp Vector Length:" << temp_vector->length();
                 id = message->id;
             }
             qDebug() << "New Id is:" << id;
-            if(!this->messagesList->contains(id))
-                this->messagesList->insert(id, temp_vector);
+            if (!this->messagesList->contains(id))
+                this->messagesList->insert(id, *temp_vector);
             emit messageListReceived();
+            qDeleteAll((*temp_vector));
+            delete temp_vector;
             break;
         }
 
@@ -551,5 +553,14 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
         QJsonObject obj = parseReply(*reply, type, request);
         reply->deleteLater();
     });
+
+}
+
+WebConnector::~WebConnector() {
+    delete mainUser;
+    qDeleteAll(*userList);
+    delete userList;
+    qDeleteAll(*feed);
+    delete feed;
 
 }

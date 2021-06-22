@@ -48,6 +48,7 @@ public:
     void setLoginAndPassword(QString login, QString password);
 
     explicit WebConnector(bool showDebug = false);
+    ~WebConnector();
 
     bool checkAuth();
 

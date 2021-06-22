@@ -1,5 +1,5 @@
 //
-// Created by Kernux on 15.06.2021.
+// Created by Kernux on 15.06.2021.FPF{P
 //
 
 #include "headers/feedlistmodel.h"
