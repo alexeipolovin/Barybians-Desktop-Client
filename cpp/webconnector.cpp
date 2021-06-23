@@ -13,6 +13,7 @@
 #include <QThread>
 #include <QSettings>
 #include <utility>
+#include <jobapi.h>
 
 
 const QByteArray HEADER_APP_TYPE = "application/x-www-form-urlencoded";
@@ -204,7 +205,7 @@ WebConnector::parseReply(QNetworkReply &reply, WebConnector::REQUEST_TYPE type, 
             QJsonDocument document = QJsonDocument::fromJson(array);
             QJsonArray jsonArray = document.array();
             QJsonObject firstObject = jsonArray.takeAt(1).toObject();
-            for (auto i : qAsConst(jsonArray)) {
+            for (const auto &i : qAsConst(jsonArray)) {
                 if (showDebug)
                     qDebug() << i;
                 User *user = new User();
@@ -448,40 +449,6 @@ QNetworkRequest WebConnector::createPostRequest(const QString &url, WebConnector
     request.setHeader(QNetworkRequest::ContentTypeHeader, HEADER_APP_TYPE);
 
     switch (type) {
-        case AUTH: {
-            this->userState = (bool) "12";
-            request.setRawHeader(("username:" + this->LOGIN).toUtf8(), ("password:" + this->PASSWORD).toUtf8());
-            break;
-        }
-        case ALL_USERS: {
-            standartHeader(request);
-            break;
-        }
-        case ALL_MESSAGES: {
-            standartHeader(request);
-            break;
-
-        }
-        case GET_FEED: {
-            standartHeader(request);
-            break;
-        }
-        case CURRENT_USER: {
-            standartHeader(request);
-            break;
-        }
-        case WRITE_POST: {
-            standartHeader(request);
-            break;
-        }
-        case GET_DIALOGS: {
-            standartHeader(request);
-            break;
-        }
-        case DOWNLOAD_PHOTO: {
-            standartHeader(request);
-            break;
-        }
         case DIALOG_WITH: {
             standartHeader(request);
             break;
@@ -503,6 +470,7 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
     switch (type) {
         case AUTH: {
             auto *params = new QUrlQuery();
+
             params->addQueryItem("username", LOGIN);
             params->addQueryItem("password", PASSWORD);
 
@@ -545,8 +513,11 @@ void WebConnector::sendRequest(QNetworkRequest &request, WebConnector::REQUEST_T
             break;
         case SEND_MESSAGE:
             auto *params = new QUrlQuery();
-            qDebug() << "Sending message...";
             params->addQueryItem("text", sendingData);
+
+            qDebug() << "Sending message...";
+
+
             reply = manager->post(request, params->toString().toUtf8());
             break;
     }
@@ -563,5 +534,6 @@ WebConnector::~WebConnector() {
     delete userList;
     qDeleteAll(*feed);
     delete feed;
+    delete
 
 }

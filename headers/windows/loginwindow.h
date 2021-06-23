@@ -9,7 +9,9 @@
 #include "headers/webconnector.h"
 
 class LoginWindow : public QMainWindow {
+
 Q_OBJECT
+
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
 

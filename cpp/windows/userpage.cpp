@@ -116,7 +116,8 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
                     if (i->userId == id) {
                         qDebug() << "user id is" << i->userId;
                         item = new QStandardItem(icon, i->title + "\n" + i->text);
-                        item->setEditable(false);
+                        if(i->userId != webConnector->mainUser->id)
+                            item->setEditable(false);
                         model->appendRow(item);
                     }
                     view->setModel(model);

@@ -25,6 +25,9 @@ UserFeed::UserFeed(WebConnector *webConnector) {
     auto mainModel = new QStandardItemModel();
 
     for (auto i:*webConnector->getUsersList()) {
+        if(i->name != "Vladimir")
+        {
+            qDebug() << "Vladimir was found";
         QStandardItem *item;
         if (i->photoName != "") {
             QPixmap pm;
@@ -37,6 +40,7 @@ UserFeed::UserFeed(WebConnector *webConnector) {
             }
             file.deleteLater();
             mainModel->appendRow(item);
+        }
         }
     }
     listView->setModel(mainModel);

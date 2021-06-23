@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 #ifdef Q_OS_WIN
     QSettings darkTheme(R"(HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",
                         QSettings::NativeFormat);
-    if (darkTheme.value("AppsUseLightTheme") != 0) {
+    if (darkTheme.value("AppsUseLightTheme") == 0) {
         qDebug() << "Dark theme enabled";
         QApplication::setStyle(QStyleFactory::create("Fusion"));
         QPalette darkPalette;

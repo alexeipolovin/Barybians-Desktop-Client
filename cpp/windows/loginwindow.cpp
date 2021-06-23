@@ -34,8 +34,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
 
     settings = new QSettings("settings.ini", QSettings::IniFormat); // создаётся/открывается файл настроек
 
-    if (settings->value("login").toString() != "" and settings->value("passwd").toString() !=
-                                                      "") // если в файле настроек находятся переменные отвечающие за логин, то они считываются
+    if (settings->value("login").toString() != "" and settings->value("passwd").toString() != "") // если в файле настроек находятся переменные отвечающие за логин, то они считываются
     {
         this->username = settings->value("login").toString();
         this->password = settings->value("passwd").toString();
@@ -141,7 +140,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
 
     passwordLabel->setStyleSheet(labelStyle + "margin-top: 20px");
     passwordLabel->setAlignment(Qt::AlignCenter);
-    passwordLabel->setFont(QFont("Arial", 12));
+    passwordLabel->setFont(QFont("JetBrains Mono", 12));
 
     loginEdit->setStyleSheet(editTextStyle);
     passwordEdit->setStyleSheet(editTextStyle);
@@ -150,7 +149,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QMainWindow(parent) {
     buttonContainer->addWidget(loginButton);
     buttonContainer->setAlignment(Qt::AlignCenter);
 
-    loginButton->setStyleSheet(buttonStyle);
+//    loginButton->setStyleSheet(buttonStyle);
     loginButton->setFont(QFont("Arial", 12));
 
     centerLayout->addWidget(logoIcon);
@@ -247,7 +246,6 @@ void LoginWindow::resizeEvent(QResizeEvent *event) {
 
 
 void LoginWindow::checkMainWindow() {
-    qDebug() << "Ну давай тест";
     if (this->webConnector->token != "false") {
         hide();
 
@@ -257,7 +255,7 @@ void LoginWindow::checkMainWindow() {
             settings->setValue("passwd", password);
         }
         qDebug() << webConnector->token;
-        auto *mainWindow = new MainWindow(nullptr, webConnector);
+        auto *mainWindow = new MainWindow(this, webConnector);
         mainWindow->show();
 
         this->close();
@@ -277,6 +275,7 @@ void LoginWindow::openMainWindow() {
 
     qDebug() << username;
     qDebug() << password;
+
     connect(webConnector, &WebConnector::valueChanged, this, &LoginWindow::checkMainWindow);
 
 }
