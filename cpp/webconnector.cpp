@@ -534,6 +534,5 @@ WebConnector::~WebConnector() {
     delete userList;
     qDeleteAll(*feed);
     delete feed;
-    delete
 
 }
