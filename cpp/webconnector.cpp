@@ -88,6 +88,15 @@ void WebConnector::standartHeader(QNetworkRequest &request) {
     request.setRawHeader(AUTHORIZATION, this->bearerToken);
 }
 
+void WebConnector::writePost(QString title, QString text) {
+    QNetworkRequest request = this->createRequest("https://barybians.ru/api/v2/posts&title=" + title + "&text=" + text, WRITE_POST);
+    sendPostRequest(request, WRITE_POST);
+}
+
+void WebConnector::sendPostRequest(QNetworkRequest request, WebConnector::REQUEST_TYPE type) {
+    //TODO: доделать
+}
+
 /**
  * @brief WebConnector::createRequest
  *

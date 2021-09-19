@@ -68,6 +68,8 @@ public:
 
     QNetworkRequest createPostRequest(const QString &url, WebConnector::REQUEST_TYPE type, QByteArray data);
 
+    void writePost(QString title, QString text);
+    void sendPostRequest(QNetworkRequest request, WebConnector::REQUEST_TYPE type);
 private:
     QByteArray sendingData;
 
