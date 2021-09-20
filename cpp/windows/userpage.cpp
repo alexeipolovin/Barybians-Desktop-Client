@@ -27,8 +27,10 @@
 #include <QLabel>
 #include <QFile>
 #include <QtWidgets/QPushButton>
+#include <QLineEdit>
 #include <QListView>
 #include <QStandardItemModel>
+#include <QTextEdit>
 #include <qtoolbar.h>
 #include <headers/windows/dialogwindow.h>
 #include "headers/windows/userpage.h"
@@ -137,4 +139,22 @@ UserPage::UserPage(QString *profilePhotoName, QString name, QString lastVisited,
     }
     mainLayout->addWidget(view);
     setLayout(mainLayout);
+    connect(writePostButton, &QPushButton::clicked, this, [this, webConnector]() {
+        QWidget *mainWidg = new QWidget();
+        QVBoxLayout *mainLay = new QVBoxLayout();
+        QPushButton *sendButton = new QPushButton();
+        QLineEdit *lineEdit = new QLineEdit();
+        QTextEdit *textEdit = new QTextEdit();
+
+        connect(sendButton, &QPushButton::clicked, this, [webConnector, lineEdit, textEdit]() {
+            webConnector->writePost(lineEdit->text(), textEdit->toPlainText());
+        });
+
+        mainLay->addWidget(lineEdit);
+        mainLay->addWidget(textEdit);
+        mainLay->addWidget(sendButton);
+        mainWidg->setLayout(mainLay);
+        mainWidg->show();
+
+    });
 }

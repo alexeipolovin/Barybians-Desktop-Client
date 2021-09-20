@@ -13,8 +13,6 @@
 #include <QThread>
 #include <QSettings>
 #include <utility>
-#include <jobapi.h>
-
 
 const QByteArray HEADER_APP_TYPE = "application/x-www-form-urlencoded";
 const QByteArray AUTHORIZATION = "Authorization";
@@ -84,17 +82,45 @@ void WebConnector::setLoginAndPassword(QString login, QString password) {
 }
 
 
-void WebConnector::standartHeader(QNetworkRequest &request) {
+inline void WebConnector::standartHeader(QNetworkRequest &request) {
     request.setRawHeader(AUTHORIZATION, this->bearerToken);
 }
 
 void WebConnector::writePost(QString title, QString text) {
-    QNetworkRequest request = this->createRequest("https://barybians.ru/api/v2/posts&title=" + title + "&text=" + text, WRITE_POST);
+    QNetworkRequest request = this->createRequest("https://barybians.ru/api/posts&title=" + title + "&text=" + text, WRITE_POST);
     sendPostRequest(request, WRITE_POST);
 }
 
 void WebConnector::sendPostRequest(QNetworkRequest request, WebConnector::REQUEST_TYPE type) {
-    //TODO: доделать
+    QByteArray array;
+    QNetworkReply *reply;
+    switch (type) {
+    case WebConnector::AUTH:
+        break;
+    case WebConnector::CURRENT_USER:
+        break;
+    case WebConnector::ALL_USERS:
+        break;
+    case WebConnector::GET_DIALOGS:
+        break;
+    case WebConnector::DOWNLOAD_PHOTO:
+        break;
+    case WebConnector::GET_FEED:
+        break;
+    case WebConnector::ALL_MESSAGES:
+        break;
+    case WebConnector::DIALOG_WITH:
+        break;
+    case WebConnector::SEND_MESSAGE:
+        break;
+    case WRITE_POST:
+            reply = manager->post(request, array);
+            break;
+    }
+
+    connect(reply, &QNetworkReply::finished, this, [reply]() {
+       qDebug() << reply->readAll();
+    });
 }
 
 /**

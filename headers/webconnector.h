@@ -40,7 +40,7 @@ public:
     QNetworkRequest createRequest(const QString &url, WebConnector::REQUEST_TYPE type);
 
     void sendRequest(QNetworkRequest &request, WebConnector::REQUEST_TYPE type);
-    void standartHeader(QNetworkRequest &request);
+    inline void standartHeader(QNetworkRequest &request);
     void makeAuth();
     void setLoginAndPassword(QString login, QString password);
     void cachePhoto(QNetworkReply *reply_photo, const QNetworkRequest &request);
